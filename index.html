@@ -1706,55 +1706,61 @@
     }
 
     /* ==========================================================
-       5. INTERACTIVE FINGER-FOLLOW DRAG & THRESHOLD AUTO STEPPING
+       5. HIGH-RESPONSIVE UNIFIED TOUCH & DRAG SYSTEM
        ========================================================== */
     function setupInteractionEvents() {
-      const stepThresholdPixels = 70;
-      const oneBeadStep = 1 / totalBeads;
+      const stepThresholdPixels = 45; // 모바일 터치 감도 45px로 민첩하게 상향
+      let touchStartY = 0;
+      let touchStartX = 0;
+      let lastTouchY = 0;
 
-      const onMouseDown = (e) => {
-        if (e.target.closest("#setup-screen") || e.target.closest(".bottom-bar") || e.target.closest("#completion-modal") || e.target.closest(".top-bar")) {
-          return;
+      const handleStart = (clientX, clientY, target) => {
+        if (target.closest("#setup-screen") || target.closest(".bottom-bar") || target.closest("#completion-modal") || target.closest(".top-bar")) {
+          return false;
         }
         isDragging = true;
         isRotatingRosary = false;
-        startDragX = e.clientX;
-        startDragY = e.clientY;
-        startRotateX = e.clientX;
+        startDragX = clientX;
+        startDragY = clientY;
+        lastTouchY = clientY;
+        startRotateX = clientX;
         fingerDragProgress = 0;
         hasTriggeredInCurrentSwipe = false;
+        return true;
       };
 
-      const onMouseMove = (e) => {
+      const handleMove = (clientX, clientY) => {
         if (!isDragging) return;
-        const deltaX = e.clientX - startDragX;
-        const deltaY = e.clientY - startDragY;
+        const deltaX = clientX - startDragX;
+        const deltaY = clientY - startDragY;
 
-        // Horizontal rotation gesture clamped to [50°, 120°]
-        if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2 || isRotatingRosary) {
+        // 수평 드래그시 회전 제스처 처리 Clamped to [50°, 120°]
+        if (Math.abs(deltaX) > Math.abs(deltaY) * 1.35 || isRotatingRosary) {
           isRotatingRosary = true;
-          const rotateDeltaX = e.clientX - startRotateX;
-          startRotateX = e.clientX;
-          targetRotationY += rotateDeltaX * 0.008;
+          const rotateDeltaX = clientX - startRotateX;
+          startRotateX = clientX;
+          targetRotationY += rotateDeltaX * 0.007;
           targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, targetRotationY));
           fingerDragProgress = 0;
           return;
         }
 
-        // Live Finger Following + Auto Step Crossing
+        // 실시간 손가락 추종 드래그 & 빠른 스와이프 알 넘김
         if (!hasTriggeredInCurrentSwipe) {
           const rawRatio = -(deltaY / stepThresholdPixels);
           const clampedRatio = Math.max(-1.0, Math.min(1.0, rawRatio));
           fingerDragProgress = clampedRatio * (1 / totalBeads);
 
-          swayVelocity += (deltaY > 0 ? 0.0012 : -0.0012);
+          const moveSpeed = clientY - lastTouchY;
+          lastTouchY = clientY;
+          swayVelocity += (moveSpeed > 0 ? 0.0018 : -0.0018);
 
-          // Once dragged past threshold, automatically step to next bead
-          if (deltaY > stepThresholdPixels * 0.55) {
+          // 45px 이상 당기면 즉시 구슬 1개 넘김 반응
+          if (deltaY > stepThresholdPixels) {
             stepToNextBead(1);
             hasTriggeredInCurrentSwipe = true;
             fingerDragProgress = 0;
-          } else if (deltaY < -stepThresholdPixels * 0.55) {
+          } else if (deltaY < -stepThresholdPixels) {
             stepToNextBead(-1);
             hasTriggeredInCurrentSwipe = true;
             fingerDragProgress = 0;
@@ -1762,15 +1768,21 @@
         }
       };
 
-      const onMouseUp = (e) => {
+      const handleEnd = (clientX, clientY) => {
         if (!isDragging) return;
         isDragging = false;
 
+        // 짧은 탭(Tap) 또는 릴리즈 시 미세 스와이프 보정
         if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
-          const deltaY = (e.clientY || 0) - startDragY;
-          if (deltaY > stepThresholdPixels * 0.38) {
+          const deltaY = clientY - startDragY;
+          const dist = Math.hypot(clientX - startDragX, clientY - startDragY);
+          
+          if (dist < 12) {
+            // 화면 빈 공간 터치(탭) 시 즉시 다음 알 넘김
             stepToNextBead(1);
-          } else if (deltaY < -stepThresholdPixels * 0.38) {
+          } else if (deltaY > stepThresholdPixels * 0.4) {
+            stepToNextBead(1);
+          } else if (deltaY < -stepThresholdPixels * 0.4) {
             stepToNextBead(-1);
           }
         }
@@ -1780,82 +1792,36 @@
         hasTriggeredInCurrentSwipe = false;
       };
 
-      // TOUCH HANDLERS (MOBILE)
-      const onTouchStart = (e) => {
-        if (e.target.closest("#setup-screen") || e.target.closest(".bottom-bar") || e.target.closest("#completion-modal") || e.target.closest(".top-bar")) {
-          return;
-        }
-        isDragging = true;
-        isRotatingRosary = false;
-        const t = e.touches[0];
-        startDragX = t.clientX;
-        startDragY = t.clientY;
-        startRotateX = t.clientX;
-        fingerDragProgress = 0;
-        hasTriggeredInCurrentSwipe = false;
-      };
+      // MOUSE LISTENERS
+      window.addEventListener("mousedown", (e) => handleStart(e.clientX, e.clientY, e.target));
+      window.addEventListener("mousemove", (e) => handleMove(e.clientX, e.clientY));
+      window.addEventListener("mouseup", (e) => handleEnd(e.clientX, e.clientY));
 
-      const onTouchMove = (e) => {
-        if (!isDragging) return;
-        const t = e.touches[0];
-        const deltaX = t.clientX - startDragX;
-        const deltaY = t.clientY - startDragY;
-
-        if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2 || isRotatingRosary) {
-          isRotatingRosary = true;
-          const rotateDeltaX = t.clientX - startRotateX;
-          startRotateX = t.clientX;
-          targetRotationY += rotateDeltaX * 0.008;
-          targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, targetRotationY));
-          fingerDragProgress = 0;
-          return;
-        }
-
-        if (!hasTriggeredInCurrentSwipe) {
-          const rawRatio = -(deltaY / stepThresholdPixels);
-          const clampedRatio = Math.max(-1.0, Math.min(1.0, rawRatio));
-          fingerDragProgress = clampedRatio * (1 / totalBeads);
-
-          swayVelocity += (deltaY > 0 ? 0.0012 : -0.0012);
-
-          if (deltaY > stepThresholdPixels * 0.55) {
-            stepToNextBead(1);
-            hasTriggeredInCurrentSwipe = true;
-            fingerDragProgress = 0;
-          } else if (deltaY < -stepThresholdPixels * 0.55) {
-            stepToNextBead(-1);
-            hasTriggeredInCurrentSwipe = true;
-            fingerDragProgress = 0;
+      // TOUCH LISTENERS (MOBILE RECURSIVE PREVENT-DEFAULT FIX)
+      window.addEventListener("touchstart", (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          if (handleStart(t.clientX, t.clientY, e.target)) {
+            if (e.cancelable) e.preventDefault();
           }
         }
-      };
+      }, { passive: false });
 
-      const onTouchEnd = (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-
-        if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
-          const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : startDragY;
-          const deltaY = endY - startDragY;
-          if (deltaY > stepThresholdPixels * 0.38) {
-            stepToNextBead(1);
-          } else if (deltaY < -stepThresholdPixels * 0.38) {
-            stepToNextBead(-1);
-          }
+      window.addEventListener("touchmove", (e) => {
+        if (isDragging && e.touches && e.touches.length > 0) {
+          if (e.cancelable) e.preventDefault();
+          const t = e.touches[0];
+          handleMove(t.clientX, t.clientY);
         }
+      }, { passive: false });
 
-        fingerDragProgress = 0;
-        isRotatingRosary = false;
-        hasTriggeredInCurrentSwipe = false;
-      };
-
-      window.addEventListener("mousedown", onMouseDown);
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
-
-      window.addEventListener("touchstart", onTouchStart, { passive: false });
-      window.addEventListener("touchmove", onTouchMove, { passive: false });
-      window.addEventListener("touchend", onTouchEnd);
+      window.addEventListener("touchend", (e) => {
+        if (isDragging) {
+          if (e.cancelable) e.preventDefault();
+          const t = (e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0] : { clientX: startDragX, clientY: startDragY };
+          handleEnd(t.clientX, t.clientY);
+        }
+      }, { passive: false });
 
       let wheelDebounce = 0;
       window.addEventListener("wheel", (e) => {
@@ -1869,6 +1835,7 @@
         }
       }, { passive: true });
     }
+
 
     function stepToNextBead(direction) {
       const maxTotalPrayers = targetLoops * totalBeads;

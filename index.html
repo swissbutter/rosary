@@ -4,10 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>묵주 기도 - 거룩하고 고요한 3D 묵주</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
+@font-face {
+    font-family: "MaruBuri";
+    src: url("https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-ExtraLight.woff2");
+    font-weight: 200;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "MaruBuri";
+    src: url("https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.woff2");
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "MaruBuri";
+    src: url("https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2");
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "MaruBuri";
+    src: url("https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2");
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "MaruBuri";
+    src: url("https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2");
+    font-weight: 700;
+    font-display: swap;
+}
     * {
       box-sizing: border-box;
       margin: 0;
@@ -22,7 +54,7 @@
       height: 100%;
       overflow: hidden;
       background-color: #080c10;
-      font-family: "EB Garamond", "Noto Serif KR", serif;
+      font-family: "MaruBuri", serif;
       color: #e2e8f0;
     }
 
@@ -87,7 +119,7 @@
     }
 
     h1, h2 {
-      font-family: "Cormorant Garamond", serif;
+      font-family: "MaruBuri", serif;
       letter-spacing: 1.5px;
       color: #e2eaf4;
       text-shadow: 0 0 18px rgba(180, 215, 255, 0.3);
@@ -141,7 +173,7 @@
     }
 
     .bead-select-card .count-number {
-      font-family: "Cormorant Garamond", serif;
+      font-family: "MaruBuri", serif;
       font-size: 18px;
       font-weight: 700;
       color: #f1f5f9;
@@ -184,7 +216,7 @@
       background: rgba(14, 22, 32, 0.9);
       border: 1px solid rgba(140, 170, 200, 0.4);
       color: #ffd000;
-      font-family: "Cormorant Garamond", serif;
+      font-family: "MaruBuri", serif;
       font-size: 15px;
       font-weight: 700;
       text-align: center;
@@ -214,7 +246,7 @@
     }
 
     .stepper-val {
-      font-family: "Cormorant Garamond", serif;
+      font-family: "MaruBuri", serif;
       font-size: 15px;
       font-weight: 700;
       color: #ffd000;
@@ -225,7 +257,7 @@
 
     .color-picker-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       margin-bottom: 12px;
     }
@@ -250,7 +282,7 @@
       border: 1px solid rgba(160, 200, 240, 0.4);
       color: #f0f6fc;
       border-radius: 10px;
-      font-family: "Noto Serif KR", serif;
+      font-family: "MaruBuri", serif;
       font-size: 14.5px;
       font-weight: 600;
       cursor: pointer !important;
@@ -296,8 +328,8 @@
 
     .counter-container {
       position: relative;
-      width: 110px;
-      height: 110px;
+      width: 115px;
+      height: 115px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -306,11 +338,12 @@
 
     .progress-svg {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: -12px;
+      left: -12px;
+      width: calc(100% + 24px);
+      height: calc(100% + 24px);
       transform: rotate(-90deg);
+      overflow: visible !important;
     }
 
     .progress-track {
@@ -327,7 +360,7 @@
       stroke-dasharray: 283;
       stroke-dashoffset: 283;
       transition: stroke-dashoffset 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-      filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.8));
+      filter: drop-shadow(0 0 10px rgba(100, 181, 246, 0.85)) drop-shadow(0 0 20px rgba(100, 181, 246, 0.45));
     }
 
     .counter-center-text {
@@ -338,7 +371,7 @@
     }
 
     .counter-value {
-      font-family: "Cormorant Garamond", serif;
+      font-family: "MaruBuri", serif;
       font-size: 34px;
       font-weight: 700;
       color: #fff;
@@ -385,7 +418,7 @@
       color: #e2eaf4;
       padding: 10px 16px;
       border-radius: 20px;
-      font-family: "Noto Serif KR", serif;
+      font-family: "MaruBuri", serif;
       font-size: 13px;
       cursor: pointer !important;
       pointer-events: auto !important;
@@ -525,7 +558,7 @@
     <!-- 구슬 색상 선택 -->
     <div class="input-group">
       <label>묵주 알 원색 선택</label>
-      <div class="color-picker-grid" style="grid-template-columns: repeat(5, 1fr);">
+      <div class="color-picker-grid" style="grid-template-columns: repeat(4, 1fr);">
         <div class="color-choice active" data-theme="jade" onclick="selectColorTheme('jade', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #48c9b0 0%, #16a085 60%, #0b5345 100%);"></div>
           <span>비취옥</span>
@@ -533,10 +566,6 @@
         <div class="color-choice" data-theme="blue" onclick="selectColorTheme('blue', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #5dade2 0%, #2471a3 60%, #153e5e 100%);"></div>
           <span>청금석</span>
-        </div>
-        <div class="color-choice" data-theme="black" onclick="selectColorTheme('black', this)">
-          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #555 0%, #222 60%, #0a0a0e 100%);"></div>
-          <span>흑요석</span>
         </div>
         <div class="color-choice" data-theme="wood" onclick="selectColorTheme('wood', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #d4a373 0%, #a06a38 60%, #583110 100%);"></div>
@@ -680,13 +709,13 @@
       canvas.height = 256;
       const ctx = canvas.getContext("2d");
 
-      // Studio horizon & warm lighting gradient
+      // 100% Super-Bright All-Yellow Sunburst Environment Map (어두운 음영 제로, 100% 눈부신 순 노랑 반사)
       const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, "#fff8e0");   // Bright sky highlight
-      grad.addColorStop(0.35, "#ffdf70");
-      grad.addColorStop(0.5, "#d4a017");  // Golden horizon
-      grad.addColorStop(0.65, "#5a3d02"); // Ground shadow
-      grad.addColorStop(1, "#2c1a02");
+      grad.addColorStop(0, "#ffffff");     // Brilliant Diamond White
+      grad.addColorStop(0.25, "#ffffa8");  // Bright Sunburst Yellow
+      grad.addColorStop(0.55, "#ffe600");  // Pure Electric Lemon Yellow
+      grad.addColorStop(0.80, "#ffd000");  // Pure Golden Yellow
+      grad.addColorStop(1.0, "#ffc400");   // Vivid Bright Canary Gold (어두운 음영 100% 없음!)
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 512, 256);
 
@@ -740,40 +769,60 @@
       return texture;
     }
 
-    function createProceduralGoldTexture() {
-      const canvas = document.createElement("canvas");
-      canvas.width = 512;
-      canvas.height = 512;
+    
+    // Seamless Tileable Canvas Texture Wrapper (상하좌우 경계선 연결 심리스 보정)
+    function makeSeamlessCanvas(canvas, drawFn) {
+      const w = canvas.width;
+      const h = canvas.height;
       const ctx = canvas.getContext("2d");
 
-      ctx.fillStyle = "#ffd700";
-      ctx.fillRect(0, 0, 512, 512);
-
-      for (let i = 0; i < 40; i++) {
-        const grad = ctx.createRadialGradient(
-          Math.random() * 512, Math.random() * 512, 5,
-          Math.random() * 512, Math.random() * 512, 180
-        );
-        grad.addColorStop(0, "rgba(255, 250, 210, 0.55)");
-        grad.addColorStop(0.4, "rgba(255, 185, 0, 0.35)");
-        grad.addColorStop(1, "rgba(180, 110, 0, 0)");
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(Math.random() * 512, Math.random() * 512, 150, 0, Math.PI * 2);
-        ctx.fill();
+      // Draw with 3x3 wrap offsets so patterns cross all borders smoothly
+      for (let ox = -w; ox <= w; ox += w) {
+        for (let oy = -h; oy <= h; oy += h) {
+          ctx.save();
+          ctx.translate(ox, oy);
+          drawFn(ctx, w, h);
+          ctx.restore();
+        }
       }
+    }
 
-      for (let i = 0; i < 35; i++) {
-        ctx.beginPath();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
-        ctx.lineWidth = 0.8;
-        const x = Math.random() * 512;
-        const y = Math.random() * 512;
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
-        ctx.stroke();
-      }
+    function createProceduralGoldTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 1024;
+
+      makeSeamlessCanvas(canvas, (ctx, w, h) => {
+        if (!ctx._bgDrawn) {
+          ctx.fillStyle = "#e5b839"; // Imperial Gold Base
+          ctx.fillRect(0, 0, w, h);
+          ctx._bgDrawn = true;
+        }
+
+        // Soft internal gold crystal radiance swirls
+        for (let i = 0; i < 40; i++) {
+          const x = (i * 157.3) % w;
+          const y = (i * 283.9) % h;
+          const r = 40 + (i % 8) * 20;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, "rgba(255, 245, 180, 0.60)");
+          grad.addColorStop(0.5, "rgba(235, 180, 40, 0.30)");
+          grad.addColorStop(1, "transparent");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Ultra-fine gold dust shimmer
+        for (let i = 0; i < 300; i++) {
+          const px = (i * 191.5) % w;
+          const py = (i * 243.1) % h;
+          ctx.fillStyle = "rgba(255, 255, 220, 0.40)";
+          ctx.fillRect(px, py, 1.5, 1.5);
+        }
+      });
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.wrapS = THREE.RepeatWrapping;
@@ -785,41 +834,29 @@
       const canvas = document.createElement("canvas");
       canvas.width = 512;
       canvas.height = 512;
-      const ctx = canvas.getContext("2d");
 
-      // Richer Deep Imperial Mint & Emerald Jade Base
-      ctx.fillStyle = "#1e8b75";
-      ctx.fillRect(0, 0, 512, 512);
+      makeSeamlessCanvas(canvas, (ctx, w, h) => {
+        if (!ctx._bgDrawn) {
+          ctx.fillStyle = "#1e8b75";
+          ctx.fillRect(0, 0, w, h);
+          ctx._bgDrawn = true;
+        }
 
-      for (let i = 0; i < 240; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 512;
-        const r = 25 + Math.random() * 100;
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        grad.addColorStop(0, "rgba(85, 235, 205, 0.45)");
-        grad.addColorStop(0.5, "rgba(20, 140, 115, 0.35)");
-        grad.addColorStop(1, "transparent");
+        for (let i = 0; i < 60; i++) {
+          const x = (i * 97.3) % w;
+          const y = (i * 183.1) % h;
+          const r = 25 + (i % 8) * 12;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, "rgba(85, 235, 205, 0.35)");
+          grad.addColorStop(0.5, "rgba(20, 140, 115, 0.25)");
+          grad.addColorStop(1, "transparent");
 
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (let i = 0; i < 40; i++) {
-        ctx.beginPath();
-        ctx.strokeStyle = "rgba(180, 255, 240, 0.35)";
-        ctx.lineWidth = 1.0 + Math.random() * 1.8;
-        const sx = Math.random() * 512;
-        const sy = Math.random() * 512;
-        ctx.moveTo(sx, sy);
-        ctx.bezierCurveTo(
-          sx + (Math.random() - 0.5) * 120, sy + (Math.random() - 0.5) * 120,
-          sx + (Math.random() - 0.5) * 120, sy + (Math.random() - 0.5) * 120,
-          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160
-        );
-        ctx.stroke();
-      }
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.wrapS = THREE.RepeatWrapping;
@@ -831,47 +868,55 @@
       const canvas = document.createElement("canvas");
       canvas.width = 1024;
       canvas.height = 1024;
-      const ctx = canvas.getContext("2d");
 
-      // Rich Warm Walnut Base Color (#7a4b27)
-      ctx.fillStyle = "#7a4b27";
-      ctx.fillRect(0, 0, 1024, 1024);
+      makeSeamlessCanvas(canvas, (ctx, w, h) => {
+        if (!ctx._bgDrawn) {
+          ctx.fillStyle = "#844b20"; // Rich Hand-waxed Olive/Walnut Wood Base
+          ctx.fillRect(0, 0, w, h);
+          ctx._bgDrawn = true;
+        }
 
-      // Organic Tree Grain Ring Waves (섬세한 수제 월넛 원목 나뭇결)
-      for (let y = 0; y < 1024; y += 1.5) {
-        const wave = Math.sin(y * 0.012) * 28 + Math.sin(y * 0.035) * 12 + Math.cos(y * 0.006) * 40;
-        const alpha = 0.16 + Math.sin(y * 0.05) * 0.12 + Math.random() * 0.05;
-        
-        ctx.fillStyle = (y % 14 < 5) 
-          ? "rgba(42, 22, 10, " + (alpha + 0.15) + ")" 
-          : "rgba(195, 135, 78, " + (alpha * 0.75) + ")";
-            
-        ctx.fillRect(0, y + wave, 1024, 2.2);
-      }
+        // Layer 1: Long Organic Flowing Timber Grain Bands (수제 무늬목 결)
+        for (let y = 0; y < h; y += 3) {
+          const wave = Math.sin(y * 0.008) * 45 + Math.cos(y * 0.022) * 20 + Math.sin(y * 0.05) * 8;
+          const alpha = 0.16 + Math.sin(y * 0.12) * 0.10;
+          
+          ctx.fillStyle = (y % 12 < 6) 
+            ? "rgba(42, 18, 6, " + (alpha + 0.18) + ")" 
+            : "rgba(220, 155, 85, " + (alpha * 0.85) + ")";
+              
+          ctx.fillRect(0, y + wave, w, 3.2);
+        }
 
-      // Natural Tree Ring Knots & Organic Swirls
-      const knots = [
-        { x: 320, y: 400, rx: 70, ry: 40, rot: 0.2 },
-        { x: 720, y: 780, rx: 90, ry: 50, rot: -0.25 }
-      ];
-
-      knots.forEach(k => {
-        for (let r = k.rx; r > 3; r -= 3) {
+        // Layer 2: Natural Flame Grain Shading & Organic Marbling (은은한 결의 유기적 불꽃 농두)
+        for (let i = 0; i < 40; i++) {
+          const x = (i * 211.7) % w;
+          const y = (i * 149.3) % h;
+          const rx = 120 + (i % 6) * 40;
+          const ry = 15 + (i % 4) * 8;
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate((i * 0.15));
+          const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+          grad.addColorStop(0, "rgba(50, 22, 7, 0.22)");
+          grad.addColorStop(0.7, "rgba(180, 115, 55, 0.12)");
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
           ctx.beginPath();
-          ctx.ellipse(k.x, k.y, r, r * (k.ry / k.rx), k.rot, 0, Math.PI * 2);
-          ctx.fillStyle = (r % 6 < 3) ? "rgba(35, 16, 6, 0.40)" : "rgba(160, 105, 50, 0.30)";
+          ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
           ctx.fill();
+          ctx.restore();
+        }
+
+        // Layer 3: Ultra-Fine Micro Timber Fibers (원목 모공 및 정교한 수기 결 입자)
+        for (let i = 0; i < 3500; i++) {
+          const fx = (i * 137.5) % w;
+          const fy = (i * 295.3) % h;
+          const len = 4 + (i % 8) * 4;
+          ctx.fillStyle = (i % 2 === 0) ? "rgba(25, 10, 3, 0.25)" : "rgba(240, 180, 110, 0.20)";
+          ctx.fillRect(fx, fy, 1.0, len);
         }
       });
-
-      // Fine Wood Micro Cut Fibers (원목 마감 섬유 입자)
-      for (let i = 0; i < 2000; i++) {
-        const px = Math.random() * 1024;
-        const py = Math.random() * 1024;
-        const len = 4 + Math.random() * 16;
-        ctx.fillStyle = (i % 2 === 0) ? "rgba(28, 12, 4, 0.22)" : "rgba(215, 155, 95, 0.18)";
-        ctx.fillRect(px, py, 1.0, len);
-      }
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.wrapS = THREE.RepeatWrapping;
@@ -881,17 +926,55 @@
 
     function createProceduralLapisTexture() {
       const canvas = document.createElement("canvas");
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext("2d");
+      canvas.width = 1024;
+      canvas.height = 1024;
 
-      ctx.fillStyle = "#1e4d8c";
-      ctx.fillRect(0, 0, 512, 512);
+      makeSeamlessCanvas(canvas, (ctx, w, h) => {
+        if (!ctx._bgDrawn) {
+          ctx.fillStyle = "#091736"; // Deep Midnight Sapphire Indigo Base
+          ctx.fillRect(0, 0, w, h);
+          ctx._bgDrawn = true;
+        }
 
-      for (let i = 0; i < 800; i++) {
-        ctx.fillStyle = "rgba(255, 215, 0, " + (0.3 + Math.random() * 0.45) + ")";
-        ctx.fillRect(Math.random() * 512, Math.random() * 512, 1.5, 1.5);
-      }
+        // Layer 1: Celestial Mystical Cyan & Deep Electric Blue Swirl Clouds
+        for (let i = 0; i < 110; i++) {
+          const x = (i * 187.3) % w;
+          const y = (i * 311.7) % h;
+          const r = 40 + (i % 14) * 16;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, "rgba(56, 189, 248, 0.55)"); // Mystical Glowing Cyan/Sky Blue
+          grad.addColorStop(0.4, "rgba(29, 78, 216, 0.40)"); // Deep Sapphire Blue
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Layer 2: Mysterious Deep Ultramarine Nebulae
+        for (let i = 0; i < 70; i++) {
+          const x = (i * 241.7) % w;
+          const y = (i * 153.1) % h;
+          const r = 30 + (i % 10) * 14;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, "rgba(99, 102, 241, 0.50)"); // Mystical Indigo/Violet Tint
+          grad.addColorStop(0.6, "rgba(30, 58, 138, 0.35)");
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Layer 3: Mystical Glowing Golden Pyrite Dust & Star Veins (신비로운 별빛 황금 입자)
+        for (let i = 0; i < 500; i++) {
+          const x = (i * 157.1) % w;
+          const y = (i * 263.7) % h;
+          const size = 1.0 + (i % 4) * 0.9;
+          ctx.fillStyle = (i % 3 === 0) ? "rgba(255, 235, 120, 0.90)" : "rgba(147, 197, 253, 0.75)";
+          ctx.fillRect(x, y, size, size);
+        }
+      });
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.wrapS = THREE.RepeatWrapping;
@@ -903,40 +986,40 @@
       const canvas = document.createElement("canvas");
       canvas.width = 1024;
       canvas.height = 1024;
-      const ctx = canvas.getContext("2d");
 
-      // Deeper Vivid Rose Pink & Magenta Quartz Base
-      ctx.fillStyle = "#d86b8b";
-      ctx.fillRect(0, 0, 1024, 1024);
+      makeSeamlessCanvas(canvas, (ctx, w, h) => {
+        if (!ctx._bgDrawn) {
+          ctx.fillStyle = "#c02652"; // Deep Vivid Rose Quartz Magenta Base
+          ctx.fillRect(0, 0, w, h);
+          ctx._bgDrawn = true;
+        }
 
-      for (let i = 0; i < 220; i++) {
-        const x = Math.random() * 1024;
-        const y = Math.random() * 1024;
-        const r = 40 + Math.random() * 140;
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        grad.addColorStop(0, "rgba(255, 205, 225, 0.60)");
-        grad.addColorStop(0.5, "rgba(215, 90, 125, 0.40)");
-        grad.addColorStop(1, "transparent");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
+        for (let i = 0; i < 90; i++) {
+          const x = (i * 173.3) % w;
+          const y = (i * 317.9) % h;
+          const r = 45 + (i % 12) * 16;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, "rgba(255, 160, 200, 0.75)"); // Rich Glowing Rose Highlight
+          grad.addColorStop(0.5, "rgba(225, 29, 90, 0.45)");  // Vivid Crimson Rose
+          grad.addColorStop(1, "transparent");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
-      for (let i = 0; i < 40; i++) {
-        ctx.beginPath();
-        ctx.strokeStyle = "rgba(255, 230, 240, 0.45)";
-        ctx.lineWidth = 0.8 + Math.random() * 1.8;
-        const sx = Math.random() * 1024;
-        const sy = Math.random() * 1024;
-        ctx.moveTo(sx, sy);
-        ctx.bezierCurveTo(
-          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160,
-          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160,
-          sx + (Math.random() - 0.5) * 220, sy + (Math.random() - 0.5) * 220
-        );
-        ctx.stroke();
-      }
+        // Quartz Silk / Crystal Vein Lines (수정 내부 맑은 빙렬 결)
+        for (let i = 0; i < 50; i++) {
+          const sx = (i * 191.1) % w;
+          const sy = (i * 277.5) % h;
+          ctx.strokeStyle = "rgba(255, 230, 245, 0.50)";
+          ctx.lineWidth = 1.2 + (i % 3) * 0.8;
+          ctx.beginPath();
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(sx + 70, sy + (i % 2 === 0 ? 35 : -35));
+          ctx.stroke();
+        }
+      });
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.wrapS = THREE.RepeatWrapping;
@@ -996,29 +1079,29 @@
 
     function getBeadThemeMaterial(theme, state) {
       if (theme === "lapis") theme = "blue";
-      if (theme === "obsidian") theme = "black";
+      
       if (theme === "pink") theme = "rose";
 
       const key = theme + "_" + state;
       if (materialCache[key]) return materialCache[key];
 
-      // 1. COMPLETED: High-Glass Translucent Crystal Gold (유리알에 싸인 투명한 황금 보석)
+      // 1. COMPLETED: High-Glass Translucent Crystal Gold (그림자 어두운 부분까지 100% 쨍하게 밝은 노란색)
       if (state === "completed") {
         if (!themeTextures.gold) themeTextures.gold = createProceduralGoldTexture();
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.gold,
-          color: 0xffdf55,          // 맑고 투명하게 빛나는 연황금 빛깔
-          roughness: 0.03,          // 유리의 표면 매끄러움
-          metalness: 0.25,          // 금속감을 낮추어 유리의 투과성 강조
-          transmission: 0.72,       // 72% 투명하게 빛이 투과되는 고급 유리질 (High Glass Translucency)
-          thickness: 1.50,          // 두꺼운 유리 알 내부 체적 심도
-          ior: 1.55,                // 영롱한 유리(Glass) 굴절률
-          clearcoat: 1.0,           // 100% 매끄럽고 영롱한 외곽 유리 캡슐 코팅
+          color: 0xffff00,              // 100% 순수 비비드 옐로우 (Pure Vivid Canary Yellow)
+          roughness: 0.01,              // 극상의 유리 광택
+          metalness: 0.02,              // 어두운 음영 반사를 줄이기 위해 메탈릭 2% 최소화
+          transmission: 0.85,           // 85% 투명하게 빛을 사방으로 퍼뜨림
+          thickness: 2.0,               // 두꺼운 노란 유리알 내부 굴절
+          ior: 1.55,
+          clearcoat: 1.0,
           clearcoatRoughness: 0.01,
           envMap: goldEnvMap,
-          envMapIntensity: 2.2,
-          emissive: 0x885500,       // 유리 알 중심에서 스며나오는 온화한 성스러운 황금 빛
-          emissiveIntensity: 0.35
+          envMapIntensity: 3.5,         // 3.5배 화사하고 눈부신 옐로우 반사강도
+          emissive: 0xffd700,           // 어두운 뒷면/그림자 면을 100% 밝게 채워주는 강렬한 옐로우 자발광
+          emissiveIntensity: 0.95       // 그림자가 생길 겨를이 없이 100% 눈부시게 밝은 노란빛 발산
         });
         return materialCache[key];
       }
@@ -1027,75 +1110,79 @@
       const isActive = (state === "active");
 
       if (theme === "wood") {
-        // High-Glass Encapsulated Sacred Wood (표면에 맑은 왁스/유리가 둘러싸여 투명하게 빛나는 정통 수제 원목)
+        // Hand-Waxed Sacred Solid Olive/Walnut Wood (실제 수제 고급 왁스 마감 정통 원목)
         if (!themeTextures.wood) themeTextures.wood = createProceduralWoodTexture();
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.wood,
-          color: 0xaa6e3c,              // 맑게 투과되는 따뜻한 앰버/월넛 우드 톤
-          roughness: 0.05,              // 외각 투명 유리의 매끄러운 왁스 반사
+          color: 0xc88248,              // 따뜻하고 생생한 원목 본연의 앰버/월넛 톤
+          roughness: 0.12,              // 부드러운 수제 왁스/오일 마감 표면
           metalness: 0.0,               // 순수 100% 원목
-          transmission: 0.48,           // 48% 투명하게 빛이 투과하여 유리 내부의 나뭇결이 생생히 반사됨
-          thickness: 1.20,              // 유리의 입체 체적 굴절 깊이
-          ior: 1.54,                    // 고급 투명 레진/글래스 굴절률
-          clearcoat: 1.0,               // 100% 두꺼운 외각 투명 유리 캡슐 코팅
-          clearcoatRoughness: 0.02,
-          bumpMap: themeTextures.wood,  // 빛을 받을 때 투명 유리 속에서 은은하게 비치는 나뭇결 릴리프
-          bumpScale: 0.012,
+          transmission: 0.08,           // 과도한 유리질 투명도를 낮추어 단단하고 묵직한 속 찬 원목 질감 표현
+          thickness: 0.60,
+          ior: 1.52,
+          clearcoat: 0.65,              // 부드럽게 빛나는 은은한 왁스 코팅
+          clearcoatRoughness: 0.08,
+          bumpMap: themeTextures.wood,  // 입체적인 나뭇결 릴리프
+          bumpScale: 0.015,
           roughnessMap: themeTextures.wood,
           envMap: goldEnvMap,
-          envMapIntensity: 1.8,
-          emissive: 0x2d1706,           // 나무 알 중심에서 스며 나오는 성스러운 원목의 은은한 온기
-          emissiveIntensity: 0.12
+          envMapIntensity: 1.2,
+          emissive: 0x3d1c08,           // 원목 알의 그윽하고 성스러운 깊은 은은함
+          emissiveIntensity: 0.15
         });
       } else if (theme === "blue") {
-        // Celestial Lapis Lazuli (청금석)
+        // Celestial Lapis Lazuli (순수 푸른빛과 황금별빛만으로 가득 찬 신비로운 청금석)
         if (!themeTextures.lapis) themeTextures.lapis = createProceduralLapisTexture();
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.lapis,
-          color: 0x184288,
-          roughness: 0.18,
-          metalness: 0.28,
-          transmission: 0.35,
-          thickness: 0.95,
-          ior: 1.60,
-          clearcoat: 0.92,
-          clearcoatRoughness: 0.06,
-          envMap: goldEnvMap,
-          envMapIntensity: 1.5,
-          emissive: 0x000000,
-          emissiveIntensity: 0.0
-        });
-      } else if (theme === "black") {
-        // Pure Obsidian Glass Crystal (흑요석)
-        materialCache[key] = new THREE.MeshPhysicalMaterial({
-          color: 0x07080c,
-          roughness: 0.02,
-          metalness: 0.05,
-          transmission: 0.45,
-          thickness: 1.20,
+          color: 0x1d58d8,              // 맑고 깊은 순수 푸른 사파이어 톤 (붉은 기 제로)
+          roughness: 0.08,
+          metalness: 0.22,
+          transmission: 0.42,
+          thickness: 1.25,
           ior: 1.58,
           clearcoat: 1.0,
+          clearcoatRoughness: 0.02,
+          envMap: goldEnvMap,
+          envMapIntensity: 2.0,
+          emissive: 0x030f30,           // 붉은기 없는 은은한 순수 블루 내부광
+          emissiveIntensity: 0.15
+        });
+      } else if (theme === "gold") {
+        // High-Glass Translucent Crystal Gold (성스러운 황금 보석)
+        if (!themeTextures.gold) themeTextures.gold = createProceduralGoldTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.gold,
+          color: 0xffdf55,          // 맑고 투명하게 빛나는 연황금 빛깔
+          roughness: 0.03,          // 유리의 표면 매끄러움
+          metalness: 0.25,          // 금속감을 낮추어 유리의 투과성 강조
+          transmission: 0.72,       // 72% 투명하게 빛이 투과되는 고급 유리질
+          thickness: 1.50,          // 두꺼운 유리 알 내부 체적 심도
+          ior: 1.55,                // 영롱한 유리(Glass) 굴절률
+          clearcoat: 1.0,           // 100% 매끄럽고 영롱한 외곽 유리 캡슐 코팅
           clearcoatRoughness: 0.01,
-          emissive: 0x000000,
-          emissiveIntensity: 0.0
+          envMap: goldEnvMap,
+          envMapIntensity: 2.2,
+          emissive: 0x885500,       // 유리 알 중심에서 스며나오는 온화한 황금 빛
+          emissiveIntensity: 0.35
         });
       } else if (theme === "rose") {
-        // Sacred Rose Quartz (장미수정)
+        // Sacred Translucent Rose Quartz (투명하게 빛나는 영롱한 장미수정)
         if (!themeTextures.rose) themeTextures.rose = createProceduralRoseQuartzTexture();
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.rose,
-          color: 0xc94d75,
-          roughness: 0.16,
-          metalness: 0.05,
-          transmission: 0.46,
-          thickness: 1.10,
-          ior: 1.56,
-          clearcoat: 0.92,
-          clearcoatRoughness: 0.06,
+          color: 0xf472b6,
+          roughness: 0.05,
+          metalness: 0.04,
+          transmission: 0.65,
+          thickness: 1.40,
+          ior: 1.55,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.01,
           envMap: goldEnvMap,
-          envMapIntensity: 1.4,
-          emissive: 0x000000,
-          emissiveIntensity: 0.0
+          envMapIntensity: 1.9,
+          emissive: 0x4a0e22,
+          emissiveIntensity: 0.20
         });
       } else {
         // Imperial Jade (비취옥)
@@ -1373,6 +1460,92 @@
       closeCompletionModal();
     }
 
+    
+    let dustParticles;
+    let particlePositions;
+    let particleSpeeds;
+
+    function initMysticalDustParticles() {
+      const particleCount = 280;
+      const geometry = new THREE.BufferGeometry();
+      particlePositions = new Float32Array(particleCount * 3);
+      particleSpeeds = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        const x = (Math.random() - 0.5) * 16;
+        const y = (Math.random() - 0.5) * 14;
+        const z = (Math.random() - 0.5) * 10 - 2;
+
+        particlePositions[i * 3] = x;
+        particlePositions[i * 3 + 1] = y;
+        particlePositions[i * 3 + 2] = z;
+
+        particleSpeeds.push({
+          x: (Math.random() - 0.5) * 0.003,
+          y: 0.002 + Math.random() * 0.004, // 천천히 위로 아지랑이처럼 피어오르는 속도
+          z: (Math.random() - 0.5) * 0.002,
+          wobbleFreq: 0.5 + Math.random() * 1.5
+        });
+      }
+
+      geometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+
+      // Circular Glowing Canvas Texture for smooth mystical dust particles
+      const canvas = document.createElement("canvas");
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext("2d");
+      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, "rgba(255, 245, 220, 0.95)");
+      grad.addColorStop(0.3, "rgba(220, 240, 255, 0.60)");
+      grad.addColorStop(0.7, "rgba(180, 215, 255, 0.20)");
+      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(32, 32, 32, 0, Math.PI * 2);
+      ctx.fill();
+
+      const particleTexture = new THREE.CanvasTexture(canvas);
+
+      const pMaterial = new THREE.PointsMaterial({
+        color: 0xfff5e6,
+        size: 0.18,
+        map: particleTexture,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      dustParticles = new THREE.Points(geometry, pMaterial);
+      scene.add(dustParticles);
+    }
+
+    function updateMysticalDustParticles() {
+      if (!dustParticles || !particlePositions) return;
+
+      const positions = dustParticles.geometry.attributes.position.array;
+      const count = particleSpeeds.length;
+      const time = Date.now() * 0.001;
+
+      for (let i = 0; i < count; i++) {
+        const speed = particleSpeeds[i];
+
+        // S-curve subtle drifting & slow upward floating (신비롭고 그윽하게 피어오르는 먼지 입자)
+        positions[i * 3] += speed.x + Math.sin(time * speed.wobbleFreq + i) * 0.0015;
+        positions[i * 3 + 1] += speed.y;
+        positions[i * 3 + 2] += speed.z + Math.cos(time * speed.wobbleFreq + i) * 0.0012;
+
+        // Reset particle position when it floats too high or far
+        if (positions[i * 3 + 1] > 7.5) {
+          positions[i * 3 + 1] = -7.5;
+          positions[i * 3] = (Math.random() - 0.5) * 16;
+        }
+      }
+
+      dustParticles.geometry.attributes.position.needsUpdate = true;
+    }
+
     function initThree() {
       const container = document.getElementById("canvas-container");
       if (!container) return;
@@ -1415,6 +1588,7 @@
       rebuildRosaryScene();
       setupInteractionEvents();
 
+      initMysticalDustParticles();
       window.addEventListener("resize", onWindowResize);
       animate();
     }
@@ -1496,16 +1670,24 @@
         beadMeshes[i].position.copy(pt);
 
         const tangent = rosarySpline.getTangentAt(normalizedProgress);
-        const up = new THREE.Vector3(0, 1, 0);
-        beadMeshes[i].quaternion.setFromUnitVectors(up, tangent);
+        const zAxis = new THREE.Vector3(0, 0, 1);
+        beadMeshes[i].quaternion.setFromUnitVectors(zAxis, tangent);
+        
+        // 3D Unique Random Orientations per bead so wood grain & lapis swirls look completely unique & non-linear on each bead
+        const uniqueEuler = new THREE.Euler(
+          (i * 1.618) % (Math.PI * 2), // Golden ratio X rotation
+          (i * 2.414) % (Math.PI * 2), // Silver ratio Y rotation
+          (i * 3.141) % (Math.PI * 2)  // Pi Z rotation
+        );
+        beadMeshes[i].quaternion.multiply(new THREE.Quaternion().setFromEuler(uniqueEuler));
       }
 
       for (let i = 0; i < totalBeads; i++) {
         const bead = beadMeshes[i];
 
-        let timesPassed = 0;
-        if (totalPrayedBeads > i) {
-          timesPassed = Math.floor((totalPrayedBeads - 1 - i) / totalBeads) + 1;
+        let isPrayedBead = (i < currentBeadIndex);
+        if (totalPrayedBeads >= totalBeads) {
+          isPrayedBead = true; // All beads completed in full loop
         }
 
         const isCurrentlyActive = (currentBeadIndex === i && totalPrayedBeads < targetLoops * totalBeads);
@@ -1513,8 +1695,8 @@
         if (isCurrentlyActive) {
           bead.material = getBeadThemeMaterial(currentTheme, "active");
           bead.scale.set(1.15, 1.15, 1.15); // 상단 활성 알 원색 유지 + 15% 볼륨감 확대
-        } else if (timesPassed % 2 === 1) {
-          bead.material = getBeadThemeMaterial(currentTheme, "completed");
+        } else if (isPrayedBead) {
+          bead.material = getBeadThemeMaterial(currentTheme, "completed"); // 황금 보석 유리 머테리얼로 변경!
           bead.scale.set(1.0, 1.0, 1.0);
         } else {
           bead.material = getBeadThemeMaterial(currentTheme, "pending");
@@ -1763,6 +1945,7 @@
       swayVelocity *= 0.92;
 
       updateDynamicRosary(swayAngle);
+      updateMysticalDustParticles();
       renderer.render(scene, camera);
     }
   </script>

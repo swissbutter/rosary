@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>묵주 기도 - 거룩하고 고요한 3D 묵주</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #080c10;
+      font-family: "EB Garamond", "Noto Serif KR", serif;
+      color: #e2e8f0;
+    }
+
+    #bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 50% 35%, rgba(140, 165, 190, 0.14) 0%, transparent 65%),
+        radial-gradient(circle at 20% 80%, rgba(180, 160, 120, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(90, 130, 170, 0.10) 0%, transparent 45%),
+        #080c10;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* Setup Screen */
+    #setup-screen {
+      position: absolute;
+      z-index: 100;
+      background: rgba(8, 14, 22, 0.95);
+      border: 1px solid rgba(160, 190, 220, 0.35);
+      border-radius: 20px;
+      padding: 16px 16px 20px;
+      width: 92%;
+      max-width: 380px;
+      max-height: 92vh;
+      overflow-y: auto;
+      backdrop-filter: blur(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-sizing: border-box;
+    }
+
+    #setup-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.94);
+    }
+
+    #setup-screen::-webkit-scrollbar { width: 4px; }
+    #setup-screen::-webkit-scrollbar-thumb { background: rgba(140, 170, 200, 0.3); border-radius: 4px; }
+
+    .symbol-icon {
+      font-size: 24px;
+      margin-bottom: 2px;
+      filter: drop-shadow(0 0 8px rgba(220, 235, 250, 0.4));
+      text-align: center;
+    }
+
+    h1, h2 {
+      font-family: "Cormorant Garamond", serif;
+      letter-spacing: 1.5px;
+      color: #e2eaf4;
+      text-shadow: 0 0 18px rgba(180, 215, 255, 0.3);
+      text-align: center;
+      margin-bottom: 2px;
+      font-size: 22px;
+    }
+
+    p.subtitle {
+      font-size: 11.5px;
+      color: #94a8b8;
+      margin-bottom: 12px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 11.5px;
+      color: #a8c2d8;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .preset-grid-clean {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .bead-select-card {
+      background: rgba(14, 22, 32, 0.85);
+      border: 1px solid rgba(140, 170, 200, 0.25);
+      border-radius: 10px;
+      padding: 8px 4px;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      touch-action: manipulation !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .bead-select-card .count-number {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1;
+    }
+
+    .bead-select-card .count-unit {
+      font-size: 10px;
+      color: #94a8b8;
+      font-weight: 500;
+    }
+
+    .custom-inputs-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
+
+    .custom-input-box {
+      background: rgba(8, 14, 22, 0.7);
+      border: 1px dashed rgba(140, 170, 200, 0.35);
+      border-radius: 8px;
+      padding: 5px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .custom-input-box label {
+      margin-bottom: 0;
+      font-size: 11px;
+      color: #94a8b8;
+      white-space: nowrap;
+    }
+
+    .custom-input-box input {
+      background: rgba(14, 22, 32, 0.9);
+      border: 1px solid rgba(140, 170, 200, 0.4);
+      color: #ffd000;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 5px;
+      padding: 2px 4px;
+      width: 44px;
+      outline: none;
+    }
+
+    .stepper-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      background: rgba(30, 50, 75, 0.85);
+      border: 1px solid rgba(140, 170, 200, 0.4);
+      color: #f1f5f9;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      transition: all 0.18s ease;
+      user-select: none;
+      outline: none;
+    }
+
+    .stepper-val {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffd000;
+      min-width: 30px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .color-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      transition: all 0.25s ease;
+    }
+
+    .color-choice span {
+      font-size: 10px;
+      color: #88a0b5;
+    }
+
+    .start-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #1c3858 0%, #0d2035 100%);
+      border: 1px solid rgba(160, 200, 240, 0.4);
+      color: #f0f6fc;
+      border-radius: 10px;
+      font-family: "Noto Serif KR", serif;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      margin-top: 4px;
+    }
+
+    .start-btn:hover {
+      background: linear-gradient(135deg, #254a73 0%, #132d4b 100%);
+      border-color: #90caf9;
+      box-shadow: 0 0 20px rgba(100, 181, 246, 0.4);
+    }
+
+    /* Prayer In-game UI */
+    #prayer-ui {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #prayer-ui.active {
+      opacity: 1;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: auto;
+    }
+
+    .counter-container {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .progress-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .progress-track {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 4;
+    }
+
+    .progress-circle {
+      fill: none;
+      stroke: #64b5f6;
+      stroke-width: 4.5;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+      filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.8));
+    }
+
+    .counter-center-text {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .counter-value {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 0 16px rgba(255,255,255,0.6);
+    }
+
+    .counter-total {
+      font-size: 12px;
+      color: #94a8b8;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .loop-badge {
+      display: inline-block;
+      font-size: 11px;
+      background: rgba(100, 181, 246, 0.22);
+      color: #90caf9;
+      border: 1px solid rgba(100, 181, 246, 0.4);
+      border-radius: 12px;
+      padding: 2px 8px;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .swipe-guide-text {
+      font-size: 12px;
+      color: rgba(200, 220, 240, 0.6);
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    .bottom-bar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      pointer-events: auto;
+    }
+
+    .action-btn {
+      background: rgba(14, 24, 36, 0.85);
+      border: 1px solid rgba(140, 170, 200, 0.3);
+      color: #e2eaf4;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-family: "Noto Serif KR", serif;
+      font-size: 13px;
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    .action-btn:hover {
+      background: rgba(26, 44, 66, 0.95);
+      border-color: #dceaf8;
+      color: #fff;
+    }
+
+    .sound-toggle-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      padding: 0;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    /* Completion Modal */
+    #completion-modal {
+      position: absolute;
+      z-index: 999;
+      background: rgba(8, 14, 22, 0.96);
+      border: 1px solid rgba(160, 190, 220, 0.45);
+      border-radius: 16px;
+      padding: 36px 26px;
+      text-align: center;
+      max-width: 360px;
+      width: 85%;
+      box-shadow: 0 0 45px rgba(140, 175, 210, 0.3);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      top: 50%;
+      left: 50%;
+    }
+
+    #completion-modal.active {
+      opacity: 1;
+      pointer-events: auto !important;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #completion-modal .symbol-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    #completion-modal h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #ffd000;
+    }
+
+    #completion-modal p {
+      font-size: 14px;
+      color: #a8c2d8;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .modal-btn {
+      position: relative;
+      z-index: 1000;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <div id="bg-overlay"></div>
+
+  <!-- Setup Screen -->
+  <div id="setup-screen">
+    <div class="symbol-icon">✨</div>
+    <h1>묵주 기도</h1>
+    <p class="subtitle">마음을 모으고 정성으로 바치는 묵주 기도</p>
+
+    <!-- 알 개수 선택: 5 / 10 / 33 / 59 / 99 / 108 & 직접 입력 -->
+    <div class="input-group">
+      <label>기도 알 개수 선택</label>
+      <div class="preset-grid-clean">
+        <div class="bead-select-card" id="bead-card-5" onclick="selectBeadPreset(5, event)">
+          <span class="count-number">5</span>
+          <span class="count-unit">알</span>
+        </div>
+        <div class="bead-select-card" id="bead-card-10" onclick="selectBeadPreset(10, event)">
+          <span class="count-number">10</span>
+          <span class="count-unit">알</span>
+        </div>
+        <div class="bead-select-card" id="bead-card-33" onclick="selectBeadPreset(33, event)">
+          <span class="count-number">33</span>
+          <span class="count-unit">알</span>
+        </div>
+        <div class="bead-select-card active" id="bead-card-59" onclick="selectBeadPreset(59, event)">
+          <span class="count-number">59</span>
+          <span class="count-unit">알</span>
+        </div>
+        <div class="bead-select-card" id="bead-card-99" onclick="selectBeadPreset(99, event)">
+          <span class="count-number">99</span>
+          <span class="count-unit">알</span>
+        </div>
+        <div class="bead-select-card" id="bead-card-108" onclick="selectBeadPreset(108, event)">
+          <span class="count-number">108</span>
+          <span class="count-unit">알</span>
+        </div>
+      </div>
+
+      <!-- 직접 입력 및 반복 횟수 스텝 버튼란 -->
+      <div class="custom-inputs-row">
+        <div class="custom-input-box">
+          <label>✏️ 직접 입력:</label>
+          <input type="number" id="custom-bead-input" min="3" max="2000" placeholder="59" value="59" oninput="onCustomBeadInput(this.value)">
+          <span class="unit-text">알</span>
+        </div>
+        <div class="custom-input-box loop-stepper-box">
+          <label>🔁 반복:</label>
+          <button type="button" class="stepper-btn" onclick="adjustLoopCount(-1, event)">−</button>
+          <span class="stepper-val" id="loop-count-display">1회</span>
+          <button type="button" class="stepper-btn" onclick="adjustLoopCount(1, event)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 구슬 색상 선택 -->
+    <div class="input-group">
+      <label>묵주 알 원색 선택</label>
+      <div class="color-picker-grid" style="grid-template-columns: repeat(5, 1fr);">
+        <div class="color-choice active" data-theme="jade" onclick="selectColorTheme('jade', this)">
+          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #48c9b0 0%, #16a085 60%, #0b5345 100%);"></div>
+          <span>비취옥</span>
+        </div>
+        <div class="color-choice" data-theme="blue" onclick="selectColorTheme('blue', this)">
+          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #5dade2 0%, #2471a3 60%, #153e5e 100%);"></div>
+          <span>청금석</span>
+        </div>
+        <div class="color-choice" data-theme="black" onclick="selectColorTheme('black', this)">
+          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #555 0%, #222 60%, #0a0a0e 100%);"></div>
+          <span>흑요석</span>
+        </div>
+        <div class="color-choice" data-theme="wood" onclick="selectColorTheme('wood', this)">
+          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #d4a373 0%, #a06a38 60%, #583110 100%);"></div>
+          <span>올리브목</span>
+        </div>
+        <div class="color-choice" data-theme="rose" onclick="selectColorTheme('rose', this)">
+          <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #f1948a 0%, #cd6155 60%, #7b241c 100%);"></div>
+          <span>장미수정</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startRosary()">기도 시작하기</button>
+  </div>
+
+  <!-- Prayer In-Game UI -->
+  <div id="prayer-ui">
+    <div class="top-bar">
+      <div class="counter-container">
+        <svg class="progress-svg" viewBox="0 0 100 100">
+          <circle class="progress-track" cx="50" cy="50" r="45"></circle>
+          <circle class="progress-circle" id="progress-circle" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="counter-center-text">
+          <div class="counter-value" id="current-count">0</div>
+          <div class="counter-total" id="total-count">/ 59</div>
+          <div class="loop-badge" id="loop-badge" style="display:none;">1 / 1회차</div>
+        </div>
+      </div>
+      <div class="swipe-guide-text">아래로 쓸어내려 알을 넘기세요</div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="action-btn" onclick="resetCounter()">🔄 처음부터</button>
+      <button class="action-btn sound-toggle-btn" id="sound-btn" onclick="toggleSound()">🔔</button>
+      <button class="action-btn" onclick="openSettings()">⚙️ 개수 변경</button>
+    </div>
+  </div>
+
+  <!-- Completion Modal -->
+  <div id="completion-modal">
+    <div class="symbol-icon">✨</div>
+    <h2>기도 완료</h2>
+    <p>설정한 모든 묵주 알을 정성껏 다 지송하셨습니다.</p>
+    <button class="start-btn modal-btn" onclick="restartPrayer()">다시 시작하기</button>
+  </div>
+
+  <!-- Three.js Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <script>
+    /* ==========================================================
+       1. WEB AUDIO & HAPTIC SYNTHESIZER
+       ========================================================== */
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtx = new AudioContext();
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    function playBeadSound() {
+      if (isMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(440 + Math.random() * 60, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.04);
+
+        gain.gain.setValueAtTime(0.32, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+
+        if (navigator.vibrate) navigator.vibrate(14);
+      } catch(e){}
+    }
+
+    function playCompletionChime() {
+      if (isMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      try {
+        const freqs = [528, 1056, 1584, 2112];
+        freqs.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          const duration = 2.8 - idx * 0.4;
+          gain.gain.setValueAtTime(0.18 / (idx + 1), audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        });
+        if (navigator.vibrate) navigator.vibrate([40, 80, 120]);
+      } catch(e){}
+    }
+
+    function toggleSound() {
+      isMuted = !isMuted;
+      const soundBtn = document.getElementById("sound-btn");
+      if (soundBtn) soundBtn.innerText = isMuted ? "🔕" : "🔔";
+    }
+
+    /* ==========================================================
+       2. PROCEDURAL TEXTURES, STUDIO ENVMAP & AUTHENTIC MATERIALS
+       ========================================================== */
+    let themeTextures = {};
+    let goldEnvMap = null;
+    let goldScratchMap = null;
+    let cordTexture = null;
+
+    function createProceduralGoldEnvMap() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+
+      // Studio horizon & warm lighting gradient
+      const grad = ctx.createLinearGradient(0, 0, 0, 256);
+      grad.addColorStop(0, "#fff8e0");   // Bright sky highlight
+      grad.addColorStop(0.35, "#ffdf70");
+      grad.addColorStop(0.5, "#d4a017");  // Golden horizon
+      grad.addColorStop(0.65, "#5a3d02"); // Ground shadow
+      grad.addColorStop(1, "#2c1a02");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 512, 256);
+
+      // Specular light sources
+      for (let i = 0; i < 4; i++) {
+        const x = 80 + i * 110;
+        const y = 60 + (i % 2) * 40;
+        const lightGrad = ctx.createRadialGradient(x, y, 0, x, y, 60);
+        lightGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+        lightGrad.addColorStop(0.3, "rgba(255, 235, 150, 0.6)");
+        lightGrad.addColorStop(1, "transparent");
+        ctx.fillStyle = lightGrad;
+        ctx.beginPath();
+        ctx.arc(x, y, 60, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      return texture;
+    }
+
+    function createGoldMicroScratchTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#808080";
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Soft, ultra-fine, subtle hairline micro-scratches
+      for (let i = 0; i < 60; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const len = 6 + Math.random() * 18;
+        const angle = Math.random() * Math.PI * 2;
+        const isBright = Math.random() > 0.5;
+
+        ctx.strokeStyle = isBright ? "rgba(255, 255, 255, 0.20)" : "rgba(0, 0, 0, 0.15)";
+        ctx.lineWidth = 0.5 + Math.random() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createProceduralGoldTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#ffd700";
+      ctx.fillRect(0, 0, 512, 512);
+
+      for (let i = 0; i < 40; i++) {
+        const grad = ctx.createRadialGradient(
+          Math.random() * 512, Math.random() * 512, 5,
+          Math.random() * 512, Math.random() * 512, 180
+        );
+        grad.addColorStop(0, "rgba(255, 250, 210, 0.55)");
+        grad.addColorStop(0.4, "rgba(255, 185, 0, 0.35)");
+        grad.addColorStop(1, "rgba(180, 110, 0, 0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(Math.random() * 512, Math.random() * 512, 150, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 35; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+        ctx.lineWidth = 0.8;
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createProceduralJadeTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      // Richer Deep Imperial Mint & Emerald Jade Base
+      ctx.fillStyle = "#1e8b75";
+      ctx.fillRect(0, 0, 512, 512);
+
+      for (let i = 0; i < 240; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const r = 25 + Math.random() * 100;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, "rgba(85, 235, 205, 0.45)");
+        grad.addColorStop(0.5, "rgba(20, 140, 115, 0.35)");
+        grad.addColorStop(1, "transparent");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 40; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(180, 255, 240, 0.35)";
+        ctx.lineWidth = 1.0 + Math.random() * 1.8;
+        const sx = Math.random() * 512;
+        const sy = Math.random() * 512;
+        ctx.moveTo(sx, sy);
+        ctx.bezierCurveTo(
+          sx + (Math.random() - 0.5) * 120, sy + (Math.random() - 0.5) * 120,
+          sx + (Math.random() - 0.5) * 120, sy + (Math.random() - 0.5) * 120,
+          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160
+        );
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createProceduralWoodTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext("2d");
+
+      // Rich Warm Walnut Base Color (#7a4b27)
+      ctx.fillStyle = "#7a4b27";
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      // Organic Tree Grain Ring Waves (섬세한 수제 월넛 원목 나뭇결)
+      for (let y = 0; y < 1024; y += 1.5) {
+        const wave = Math.sin(y * 0.012) * 28 + Math.sin(y * 0.035) * 12 + Math.cos(y * 0.006) * 40;
+        const alpha = 0.16 + Math.sin(y * 0.05) * 0.12 + Math.random() * 0.05;
+        
+        ctx.fillStyle = (y % 14 < 5) 
+          ? "rgba(42, 22, 10, " + (alpha + 0.15) + ")" 
+          : "rgba(195, 135, 78, " + (alpha * 0.75) + ")";
+            
+        ctx.fillRect(0, y + wave, 1024, 2.2);
+      }
+
+      // Natural Tree Ring Knots & Organic Swirls
+      const knots = [
+        { x: 320, y: 400, rx: 70, ry: 40, rot: 0.2 },
+        { x: 720, y: 780, rx: 90, ry: 50, rot: -0.25 }
+      ];
+
+      knots.forEach(k => {
+        for (let r = k.rx; r > 3; r -= 3) {
+          ctx.beginPath();
+          ctx.ellipse(k.x, k.y, r, r * (k.ry / k.rx), k.rot, 0, Math.PI * 2);
+          ctx.fillStyle = (r % 6 < 3) ? "rgba(35, 16, 6, 0.40)" : "rgba(160, 105, 50, 0.30)";
+          ctx.fill();
+        }
+      });
+
+      // Fine Wood Micro Cut Fibers (원목 마감 섬유 입자)
+      for (let i = 0; i < 2000; i++) {
+        const px = Math.random() * 1024;
+        const py = Math.random() * 1024;
+        const len = 4 + Math.random() * 16;
+        ctx.fillStyle = (i % 2 === 0) ? "rgba(28, 12, 4, 0.22)" : "rgba(215, 155, 95, 0.18)";
+        ctx.fillRect(px, py, 1.0, len);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createProceduralLapisTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#1e4d8c";
+      ctx.fillRect(0, 0, 512, 512);
+
+      for (let i = 0; i < 800; i++) {
+        ctx.fillStyle = "rgba(255, 215, 0, " + (0.3 + Math.random() * 0.45) + ")";
+        ctx.fillRect(Math.random() * 512, Math.random() * 512, 1.5, 1.5);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    function createProceduralRoseQuartzTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1024;
+      canvas.height = 1024;
+      const ctx = canvas.getContext("2d");
+
+      // Deeper Vivid Rose Pink & Magenta Quartz Base
+      ctx.fillStyle = "#d86b8b";
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      for (let i = 0; i < 220; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 1024;
+        const r = 40 + Math.random() * 140;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, "rgba(255, 205, 225, 0.60)");
+        grad.addColorStop(0.5, "rgba(215, 90, 125, 0.40)");
+        grad.addColorStop(1, "transparent");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < 40; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255, 230, 240, 0.45)";
+        ctx.lineWidth = 0.8 + Math.random() * 1.8;
+        const sx = Math.random() * 1024;
+        const sy = Math.random() * 1024;
+        ctx.moveTo(sx, sy);
+        ctx.bezierCurveTo(
+          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160,
+          sx + (Math.random() - 0.5) * 160, sy + (Math.random() - 0.5) * 160,
+          sx + (Math.random() - 0.5) * 220, sy + (Math.random() - 0.5) * 220
+        );
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+
+    function createCordTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 128;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      // Deep Dark Antique Bronze / Mahogany Brown Thread (더 어둡고 중후한 줄 색상)
+      for (let y = 0; y < 512; y += 16) {
+        ctx.fillStyle = (y % 32 === 0) ? "#4a3518" : "#2d1f0d";
+        ctx.fillRect(0, y, 128, 16);
+
+        ctx.fillStyle = "rgba(180, 130, 60, 0.20)";
+        ctx.fillRect(8, y + 2, 112, 4);
+
+        ctx.strokeStyle = "rgba(20, 12, 4, 0.45)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(128, y + 16);
+        ctx.stroke();
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(1, 60);
+      return texture;
+    }
+
+    let currentTheme = "jade";
+
+    function selectColorTheme(theme, elem) {
+      currentTheme = theme;
+      document.querySelectorAll(".color-choice").forEach(c => c.classList.remove("active"));
+      if (elem) {
+        elem.classList.add("active");
+      } else {
+        const found = document.querySelector(".color-choice[data-theme=\"" + theme + "\"]");
+        if (found) found.classList.add("active");
+      }
+      if (navigator.vibrate) navigator.vibrate(10);
+      if (scene) updateDynamicRosary(0);
+    }
+
+    /* ==========================================================
+       2. PROCEDURAL HIGH-END PHYSICAL MATERIALS
+       ========================================================== */
+    const materialCache = {};
+
+    function getBeadThemeMaterial(theme, state) {
+      if (theme === "lapis") theme = "blue";
+      if (theme === "obsidian") theme = "black";
+      if (theme === "pink") theme = "rose";
+
+      const key = theme + "_" + state;
+      if (materialCache[key]) return materialCache[key];
+
+      // 1. COMPLETED: High-Glass Translucent Crystal Gold (유리알에 싸인 투명한 황금 보석)
+      if (state === "completed") {
+        if (!themeTextures.gold) themeTextures.gold = createProceduralGoldTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.gold,
+          color: 0xffdf55,          // 맑고 투명하게 빛나는 연황금 빛깔
+          roughness: 0.03,          // 유리의 표면 매끄러움
+          metalness: 0.25,          // 금속감을 낮추어 유리의 투과성 강조
+          transmission: 0.72,       // 72% 투명하게 빛이 투과되는 고급 유리질 (High Glass Translucency)
+          thickness: 1.50,          // 두꺼운 유리 알 내부 체적 심도
+          ior: 1.55,                // 영롱한 유리(Glass) 굴절률
+          clearcoat: 1.0,           // 100% 매끄럽고 영롱한 외곽 유리 캡슐 코팅
+          clearcoatRoughness: 0.01,
+          envMap: goldEnvMap,
+          envMapIntensity: 2.2,
+          emissive: 0x885500,       // 유리 알 중심에서 스며나오는 온화한 성스러운 황금 빛
+          emissiveIntensity: 0.35
+        });
+        return materialCache[key];
+      }
+
+      // 2. ACTIVE / PENDING: Theme-specific material with glowing aura on Active!
+      const isActive = (state === "active");
+
+      if (theme === "wood") {
+        // High-Glass Encapsulated Sacred Wood (표면에 맑은 왁스/유리가 둘러싸여 투명하게 빛나는 정통 수제 원목)
+        if (!themeTextures.wood) themeTextures.wood = createProceduralWoodTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.wood,
+          color: 0xaa6e3c,              // 맑게 투과되는 따뜻한 앰버/월넛 우드 톤
+          roughness: 0.05,              // 외각 투명 유리의 매끄러운 왁스 반사
+          metalness: 0.0,               // 순수 100% 원목
+          transmission: 0.48,           // 48% 투명하게 빛이 투과하여 유리 내부의 나뭇결이 생생히 반사됨
+          thickness: 1.20,              // 유리의 입체 체적 굴절 깊이
+          ior: 1.54,                    // 고급 투명 레진/글래스 굴절률
+          clearcoat: 1.0,               // 100% 두꺼운 외각 투명 유리 캡슐 코팅
+          clearcoatRoughness: 0.02,
+          bumpMap: themeTextures.wood,  // 빛을 받을 때 투명 유리 속에서 은은하게 비치는 나뭇결 릴리프
+          bumpScale: 0.012,
+          roughnessMap: themeTextures.wood,
+          envMap: goldEnvMap,
+          envMapIntensity: 1.8,
+          emissive: 0x2d1706,           // 나무 알 중심에서 스며 나오는 성스러운 원목의 은은한 온기
+          emissiveIntensity: 0.12
+        });
+      } else if (theme === "blue") {
+        // Celestial Lapis Lazuli (청금석)
+        if (!themeTextures.lapis) themeTextures.lapis = createProceduralLapisTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.lapis,
+          color: 0x184288,
+          roughness: 0.18,
+          metalness: 0.28,
+          transmission: 0.35,
+          thickness: 0.95,
+          ior: 1.60,
+          clearcoat: 0.92,
+          clearcoatRoughness: 0.06,
+          envMap: goldEnvMap,
+          envMapIntensity: 1.5,
+          emissive: 0x000000,
+          emissiveIntensity: 0.0
+        });
+      } else if (theme === "black") {
+        // Pure Obsidian Glass Crystal (흑요석)
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          color: 0x07080c,
+          roughness: 0.02,
+          metalness: 0.05,
+          transmission: 0.45,
+          thickness: 1.20,
+          ior: 1.58,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.01,
+          emissive: 0x000000,
+          emissiveIntensity: 0.0
+        });
+      } else if (theme === "rose") {
+        // Sacred Rose Quartz (장미수정)
+        if (!themeTextures.rose) themeTextures.rose = createProceduralRoseQuartzTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.rose,
+          color: 0xc94d75,
+          roughness: 0.16,
+          metalness: 0.05,
+          transmission: 0.46,
+          thickness: 1.10,
+          ior: 1.56,
+          clearcoat: 0.92,
+          clearcoatRoughness: 0.06,
+          envMap: goldEnvMap,
+          envMapIntensity: 1.4,
+          emissive: 0x000000,
+          emissiveIntensity: 0.0
+        });
+      } else {
+        // Imperial Jade (비취옥)
+        if (!themeTextures.jade) themeTextures.jade = createProceduralJadeTexture();
+        materialCache[key] = new THREE.MeshPhysicalMaterial({
+          map: themeTextures.jade,
+          color: 0x169b82,
+          roughness: 0.20,
+          metalness: 0.06,
+          transmission: 0.42,
+          thickness: 0.95,
+          ior: 1.55,
+          clearcoat: 0.90,
+          clearcoatRoughness: 0.08,
+          envMap: goldEnvMap,
+          envMapIntensity: 1.4,
+          emissive: 0x000000,
+          emissiveIntensity: 0.0
+        });
+      }
+
+      return materialCache[key];
+    }
+
+    function createWhiteJadeMaterial(state) {
+      return getBeadThemeMaterial(currentTheme, state);
+    }
+
+    function createCordMaterial() {
+      if (!cordTexture) cordTexture = createCordTexture();
+      return new THREE.MeshStandardMaterial({
+        map: cordTexture,
+        color: 0xdfb448,
+        roughness: 0.42,
+        metalness: 0.30
+      });
+    }
+
+    /* ==========================================================
+       3. THREE.JS SCENE, GRAVITY TALL OVAL SPLINE & CAM FRAMING
+       ========================================================== */
+    let scene, camera, renderer;
+    let rosaryGroup;
+    let baseSplinePoints = [];
+    let rosarySpline = null;
+    let beadMeshes = [];
+    let cordMesh = null;
+
+    let totalBeads = 59;
+    let chosenTotalBeads = 59;
+    let targetLoops = 1;
+    let currentLoop = 1;
+    let currentBeadIndex = 0;
+    let totalPrayedBeads = 0;
+
+    let isDragging = false;
+    let startDragX = 0;
+    let startDragY = 0;
+    let hasTriggeredInCurrentSwipe = false;
+    let fingerDragProgress = 0;
+    let beadBaseProgress = 0;
+    let smoothProgress = 0;
+
+    // START BASE Y ROTATION: 85 DEGREES
+    const BASE_ROTATION_Y = 85 * (Math.PI / 180);
+    const ROTATION_LIMIT_RAD = 35 * (Math.PI / 180); // ±35 degrees
+    const MIN_ROTATION_Y = BASE_ROTATION_Y - ROTATION_LIMIT_RAD; // 50 deg
+    const MAX_ROTATION_Y = BASE_ROTATION_Y + ROTATION_LIMIT_RAD; // 120 deg
+
+    let userRotationY = BASE_ROTATION_Y;
+    let targetRotationY = BASE_ROTATION_Y;
+    let isRotatingRosary = false;
+    let startRotateX = 0;
+
+    let swayAngle = 0;
+    let swayVelocity = 0;
+
+    function getBeadRadius(total) {
+      if (total <= 10) return 0.28;
+      if (total <= 33) return 0.22;
+      if (total <= 59) return 0.18;
+      return Math.max(0.09, 0.18 * Math.pow(59 / total, 0.50));
+    }
+
+    function getCordThickness(total) {
+      return Math.max(0.009, getBeadRadius(total) * 0.10);
+    }
+
+    function getGravitySplinePoints(total) {
+      const beadR = getBeadRadius(total);
+      const targetGap = Math.max(0.20, beadR * 2.2);
+      const pitchPerBead = beadR * 2 + targetGap;
+      const requiredPerimeter = total * pitchPerBead;
+
+      const archWidth = 0.52;
+      const verticalHangDepth = Math.max(2.4, (requiredPerimeter - archWidth * 2) * 0.48);
+
+      const topY = 1.75; // Elevated top apex
+
+      return [
+        new THREE.Vector3( 0.00,             topY,                             0.0), // Top Apex Bead
+        new THREE.Vector3( archWidth * 0.70, topY - 0.22,                      0.0),
+        new THREE.Vector3( archWidth,        topY - 0.70,                      0.0),
+        new THREE.Vector3( archWidth * 0.88, topY - verticalHangDepth * 0.38,  0.0),
+        new THREE.Vector3( archWidth * 0.65, topY - verticalHangDepth * 0.78,  0.0),
+        new THREE.Vector3( 0.00,             topY - verticalHangDepth,         0.0), // Bottom Loop Apex
+        new THREE.Vector3(-archWidth * 0.65, topY - verticalHangDepth * 0.78,  0.0),
+        new THREE.Vector3(-archWidth * 0.88, topY - verticalHangDepth * 0.38,  0.0),
+        new THREE.Vector3(-archWidth,        topY - 0.70,                      0.0),
+        new THREE.Vector3(-archWidth * 0.70, topY - 0.22,                      0.0)
+      ];
+    }
+
+    function updateCameraFraming(total) {
+      if (!camera) return;
+      const topY = 1.75;
+
+      const zoomExponent = 0.72;
+      const zoomFactor = Math.pow(59 / Math.max(20, total), zoomExponent);
+      const baseCamDist = 4.2 * Math.max(0.32, Math.min(1.35, zoomFactor));
+
+      const camY = topY + baseCamDist * 0.72;
+      const camZ = baseCamDist * 0.92;
+
+      camera.position.set(0, camY, camZ);
+      camera.lookAt(0, topY - 0.2, 0);
+    }
+
+    function adjustLoopCount(delta, evt) {
+      if (evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+      }
+      targetLoops = Math.max(1, Math.min(100, targetLoops + delta));
+      const displayElem = document.getElementById("loop-count-display");
+      if (displayElem) {
+        displayElem.innerText = targetLoops + "회";
+      }
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+
+    function selectBeadPreset(count, evt) {
+      chosenTotalBeads = count;
+      const customInput = document.getElementById("custom-bead-input");
+      if (customInput) customInput.value = count;
+
+      document.querySelectorAll(".bead-select-card").forEach(c => c.classList.remove("active"));
+      const targetCard = document.getElementById("bead-card-" + count) || (evt && evt.currentTarget);
+      if (targetCard) targetCard.classList.add("active");
+      
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+
+    function onCustomBeadInput(val) {
+      const parsed = parseInt(val, 10);
+      if (!isNaN(parsed) && parsed >= 3) {
+        chosenTotalBeads = Math.min(2000, parsed);
+        document.querySelectorAll(".bead-select-card").forEach(c => c.classList.remove("active"));
+        const matchCard = document.getElementById("bead-card-" + chosenTotalBeads);
+        if (matchCard) matchCard.classList.add("active");
+      }
+    }
+
+    function resetCounter() {
+      totalPrayedBeads = 0;
+      currentBeadIndex = 0;
+      currentLoop = 1;
+      fingerDragProgress = 0;
+      beadBaseProgress = 0;
+      smoothProgress = 0;
+      swayAngle = 0;
+      swayVelocity = 0;
+      hasTriggeredInCurrentSwipe = false;
+      userRotationY = BASE_ROTATION_Y;
+      targetRotationY = BASE_ROTATION_Y;
+
+      const loopBadge = document.getElementById("loop-badge");
+      if (loopBadge) {
+        if (targetLoops > 1) {
+          loopBadge.style.display = "inline-block";
+          loopBadge.innerText = "1 / " + targetLoops + "회차";
+        } else {
+          loopBadge.style.display = "none";
+        }
+      }
+
+      updateCounterUI();
+      updateDynamicRosary(0);
+      closeCompletionModal();
+    }
+
+    function updateCounterUI() {
+      const countElem = document.getElementById("current-count");
+      if (countElem) countElem.innerText = currentBeadIndex;
+
+      const circle = document.getElementById("progress-circle");
+      if (circle) {
+        const circumference = 2 * Math.PI * 45;
+        const progress = (totalBeads > 0) ? (currentBeadIndex / totalBeads) : 0;
+        const offset = circumference - (progress * circumference);
+        circle.style.strokeDashoffset = offset;
+      }
+    }
+
+    function startRosary() {
+      initAudio();
+      
+      const customIn = document.getElementById("custom-bead-input");
+      if (customIn && customIn.value) {
+        const parsed = parseInt(customIn.value, 10);
+        if (!isNaN(parsed) && parsed >= 3) {
+          chosenTotalBeads = Math.min(2000, parsed);
+        }
+      }
+      totalBeads = Math.max(3, Math.min(2000, chosenTotalBeads || 59));
+      targetLoops = Math.max(1, Math.min(100, targetLoops || 1));
+
+      totalPrayedBeads = 0;
+      currentLoop = 1;
+      currentBeadIndex = 0;
+
+      const setupScrn = document.getElementById("setup-screen");
+      const prayerUI = document.getElementById("prayer-ui");
+      if (setupScrn) setupScrn.classList.add("hidden");
+      if (prayerUI) prayerUI.classList.add("active");
+
+      const totalCountElem = document.getElementById("total-count");
+      if (totalCountElem) totalCountElem.innerText = "/ " + totalBeads;
+
+      const loopBadge = document.getElementById("loop-badge");
+      if (loopBadge) {
+        if (targetLoops > 1) {
+          loopBadge.style.display = "inline-block";
+          loopBadge.innerText = currentLoop + " / " + targetLoops + "회차";
+        } else {
+          loopBadge.style.display = "none";
+        }
+      }
+      
+      fingerDragProgress = 0;
+      beadBaseProgress = 0;
+      smoothProgress = 0;
+      swayAngle = 0;
+      swayVelocity = 0;
+      userRotationY = BASE_ROTATION_Y;
+      targetRotationY = BASE_ROTATION_Y;
+      hasTriggeredInCurrentSwipe = false;
+
+      updateCounterUI();
+
+      if (!scene) {
+        initThree();
+      } else {
+        rebuildRosaryScene();
+      }
+    }
+
+    function closeCompletionModal() {
+      const compModal = document.getElementById("completion-modal");
+      if (compModal) {
+        compModal.classList.remove("active");
+      }
+    }
+
+    function restartPrayer() {
+      closeCompletionModal();
+      resetCounter();
+    }
+
+    function openSettings() {
+      const setupScrn = document.getElementById("setup-screen");
+      const prayerUI = document.getElementById("prayer-ui");
+      if (setupScrn) setupScrn.classList.remove("hidden");
+      if (prayerUI) prayerUI.classList.remove("active");
+      closeCompletionModal();
+    }
+
+    function initThree() {
+      const container = document.getElementById("canvas-container");
+      if (!container) return;
+
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x080c10, 0.008);
+
+      camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.30;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      container.appendChild(renderer.domElement);
+
+      goldEnvMap = createProceduralGoldEnvMap();
+      goldScratchMap = createGoldMicroScratchTexture();
+
+      // Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xdbe6f2, 1.8);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xfffbf5, 2.2);
+      mainLight.position.set(2.0, 7.0, 5.0);
+      mainLight.castShadow = true;
+      scene.add(mainLight);
+
+      const fillLight = new THREE.DirectionalLight(0x95b0ce, 1.2);
+      fillLight.position.set(-3.5, 4.5, 3.0);
+      scene.add(fillLight);
+
+      const bottomRim = new THREE.PointLight(0xb0c8dc, 1.4, 25);
+      bottomRim.position.set(0, -3.0, 2.0);
+      scene.add(bottomRim);
+
+      rebuildRosaryScene();
+      setupInteractionEvents();
+
+      window.addEventListener("resize", onWindowResize);
+      animate();
+    }
+
+    function rebuildRosaryScene() {
+      if (rosaryGroup) scene.remove(rosaryGroup);
+
+      rosaryGroup = new THREE.Group();
+      rosaryGroup.rotation.y = BASE_ROTATION_Y;
+
+      beadMeshes = [];
+
+      baseSplinePoints = getGravitySplinePoints(totalBeads);
+      rosarySpline = new THREE.CatmullRomCurve3(baseSplinePoints, true, "centripetal", 0.5);
+
+      const beadR = getBeadRadius(totalBeads);
+      const cordR = getCordThickness(totalBeads);
+
+      updateCameraFraming(totalBeads);
+
+      // 1. Slim Golden Cord
+      const tubeGeo = new THREE.TubeGeometry(rosarySpline, 320, cordR, 12, true);
+      cordMesh = new THREE.Mesh(tubeGeo, createCordMaterial());
+      cordMesh.castShadow = true;
+      rosaryGroup.add(cordMesh);
+
+      // 2. Pure Spherical Natural Beads
+      const beadGeo = new THREE.SphereGeometry(beadR, 32, 32);
+
+      for (let i = 0; i < totalBeads; i++) {
+        const bead = new THREE.Mesh(beadGeo, createWhiteJadeMaterial("pending"));
+        bead.castShadow = true;
+        bead.receiveShadow = true;
+        bead.userData = { index: i };
+        bead.scale.set(1.0, 1.0, 1.0);
+
+        rosaryGroup.add(bead);
+        beadMeshes.push(bead);
+      }
+
+      scene.add(rosaryGroup);
+      updateDynamicRosary(0);
+    }
+
+    /* ==========================================================
+       4. SYNCHRONIZED DYNAMIC MOTION & CONTINUOUS ROUND FLOW
+       ========================================================== */
+    function updateDynamicRosary(swayOffset) {
+      if (!rosarySpline || beadMeshes.length === 0) return;
+
+      const cordR = getCordThickness(totalBeads);
+
+      const deformedPoints = baseSplinePoints.map((pt, idx) => {
+        const newPt = pt.clone();
+        if (idx >= 2 && idx <= 8) {
+          const depthWeight = Math.max(0, 1.75 - pt.y) / 3.5;
+          newPt.x += Math.sin(swayOffset) * depthWeight * 0.45;
+        }
+        return newPt;
+      });
+
+      rosarySpline.points = deformedPoints;
+      rosarySpline.updateArcLength = true;
+
+      if (cordMesh) {
+        cordMesh.geometry.dispose();
+        cordMesh.geometry = new THREE.TubeGeometry(rosarySpline, 320, cordR, 12, true);
+
+        if (cordTexture) {
+          cordTexture.offset.y = smoothProgress * 60;
+        }
+      }
+
+      for (let i = 0; i < totalBeads; i++) {
+        let normalizedProgress = (i / totalBeads + smoothProgress) % 1.0;
+        if (normalizedProgress < 0) normalizedProgress += 1.0;
+
+        const pt = rosarySpline.getPointAt(normalizedProgress);
+        beadMeshes[i].position.copy(pt);
+
+        const tangent = rosarySpline.getTangentAt(normalizedProgress);
+        const up = new THREE.Vector3(0, 1, 0);
+        beadMeshes[i].quaternion.setFromUnitVectors(up, tangent);
+      }
+
+      for (let i = 0; i < totalBeads; i++) {
+        const bead = beadMeshes[i];
+
+        let timesPassed = 0;
+        if (totalPrayedBeads > i) {
+          timesPassed = Math.floor((totalPrayedBeads - 1 - i) / totalBeads) + 1;
+        }
+
+        const isCurrentlyActive = (currentBeadIndex === i && totalPrayedBeads < targetLoops * totalBeads);
+
+        if (isCurrentlyActive) {
+          bead.material = getBeadThemeMaterial(currentTheme, "active");
+          bead.scale.set(1.15, 1.15, 1.15); // 상단 활성 알 원색 유지 + 15% 볼륨감 확대
+        } else if (timesPassed % 2 === 1) {
+          bead.material = getBeadThemeMaterial(currentTheme, "completed");
+          bead.scale.set(1.0, 1.0, 1.0);
+        } else {
+          bead.material = getBeadThemeMaterial(currentTheme, "pending");
+          bead.scale.set(1.0, 1.0, 1.0);
+        }
+      }
+    }
+
+    /* ==========================================================
+       5. INTERACTIVE FINGER-FOLLOW DRAG & THRESHOLD AUTO STEPPING
+       ========================================================== */
+    function setupInteractionEvents() {
+      const stepThresholdPixels = 70;
+      const oneBeadStep = 1 / totalBeads;
+
+      const onMouseDown = (e) => {
+        if (e.target.closest("#setup-screen") || e.target.closest(".bottom-bar") || e.target.closest("#completion-modal") || e.target.closest(".top-bar")) {
+          return;
+        }
+        isDragging = true;
+        isRotatingRosary = false;
+        startDragX = e.clientX;
+        startDragY = e.clientY;
+        startRotateX = e.clientX;
+        fingerDragProgress = 0;
+        hasTriggeredInCurrentSwipe = false;
+      };
+
+      const onMouseMove = (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startDragX;
+        const deltaY = e.clientY - startDragY;
+
+        // Horizontal rotation gesture clamped to [50°, 120°]
+        if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2 || isRotatingRosary) {
+          isRotatingRosary = true;
+          const rotateDeltaX = e.clientX - startRotateX;
+          startRotateX = e.clientX;
+          targetRotationY += rotateDeltaX * 0.008;
+          targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, targetRotationY));
+          fingerDragProgress = 0;
+          return;
+        }
+
+        // Live Finger Following + Auto Step Crossing
+        if (!hasTriggeredInCurrentSwipe) {
+          const rawRatio = -(deltaY / stepThresholdPixels);
+          const clampedRatio = Math.max(-1.0, Math.min(1.0, rawRatio));
+          fingerDragProgress = clampedRatio * (1 / totalBeads);
+
+          swayVelocity += (deltaY > 0 ? 0.0012 : -0.0012);
+
+          // Once dragged past threshold, automatically step to next bead
+          if (deltaY > stepThresholdPixels * 0.55) {
+            stepToNextBead(1);
+            hasTriggeredInCurrentSwipe = true;
+            fingerDragProgress = 0;
+          } else if (deltaY < -stepThresholdPixels * 0.55) {
+            stepToNextBead(-1);
+            hasTriggeredInCurrentSwipe = true;
+            fingerDragProgress = 0;
+          }
+        }
+      };
+
+      const onMouseUp = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
+          const deltaY = (e.clientY || 0) - startDragY;
+          if (deltaY > stepThresholdPixels * 0.38) {
+            stepToNextBead(1);
+          } else if (deltaY < -stepThresholdPixels * 0.38) {
+            stepToNextBead(-1);
+          }
+        }
+
+        fingerDragProgress = 0;
+        isRotatingRosary = false;
+        hasTriggeredInCurrentSwipe = false;
+      };
+
+      // TOUCH HANDLERS (MOBILE)
+      const onTouchStart = (e) => {
+        if (e.target.closest("#setup-screen") || e.target.closest(".bottom-bar") || e.target.closest("#completion-modal") || e.target.closest(".top-bar")) {
+          return;
+        }
+        isDragging = true;
+        isRotatingRosary = false;
+        const t = e.touches[0];
+        startDragX = t.clientX;
+        startDragY = t.clientY;
+        startRotateX = t.clientX;
+        fingerDragProgress = 0;
+        hasTriggeredInCurrentSwipe = false;
+      };
+
+      const onTouchMove = (e) => {
+        if (!isDragging) return;
+        const t = e.touches[0];
+        const deltaX = t.clientX - startDragX;
+        const deltaY = t.clientY - startDragY;
+
+        if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2 || isRotatingRosary) {
+          isRotatingRosary = true;
+          const rotateDeltaX = t.clientX - startRotateX;
+          startRotateX = t.clientX;
+          targetRotationY += rotateDeltaX * 0.008;
+          targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, targetRotationY));
+          fingerDragProgress = 0;
+          return;
+        }
+
+        if (!hasTriggeredInCurrentSwipe) {
+          const rawRatio = -(deltaY / stepThresholdPixels);
+          const clampedRatio = Math.max(-1.0, Math.min(1.0, rawRatio));
+          fingerDragProgress = clampedRatio * (1 / totalBeads);
+
+          swayVelocity += (deltaY > 0 ? 0.0012 : -0.0012);
+
+          if (deltaY > stepThresholdPixels * 0.55) {
+            stepToNextBead(1);
+            hasTriggeredInCurrentSwipe = true;
+            fingerDragProgress = 0;
+          } else if (deltaY < -stepThresholdPixels * 0.55) {
+            stepToNextBead(-1);
+            hasTriggeredInCurrentSwipe = true;
+            fingerDragProgress = 0;
+          }
+        }
+      };
+
+      const onTouchEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
+          const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : startDragY;
+          const deltaY = endY - startDragY;
+          if (deltaY > stepThresholdPixels * 0.38) {
+            stepToNextBead(1);
+          } else if (deltaY < -stepThresholdPixels * 0.38) {
+            stepToNextBead(-1);
+          }
+        }
+
+        fingerDragProgress = 0;
+        isRotatingRosary = false;
+        hasTriggeredInCurrentSwipe = false;
+      };
+
+      window.addEventListener("mousedown", onMouseDown);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+
+      window.addEventListener("touchstart", onTouchStart, { passive: false });
+      window.addEventListener("touchmove", onTouchMove, { passive: false });
+      window.addEventListener("touchend", onTouchEnd);
+
+      let wheelDebounce = 0;
+      window.addEventListener("wheel", (e) => {
+        if (document.getElementById("prayer-ui").classList.contains("active")) {
+          const now = Date.now();
+          if (now - wheelDebounce > 160) {
+            wheelDebounce = now;
+            if (e.deltaY > 0) stepToNextBead(1);
+            else if (e.deltaY < 0) stepToNextBead(-1);
+          }
+        }
+      }, { passive: true });
+    }
+
+    function stepToNextBead(direction) {
+      const maxTotalPrayers = targetLoops * totalBeads;
+      const prevTotal = totalPrayedBeads;
+      totalPrayedBeads += direction;
+
+      if (totalPrayedBeads < 0) totalPrayedBeads = 0;
+      if (totalPrayedBeads > maxTotalPrayers) totalPrayedBeads = maxTotalPrayers;
+
+      currentLoop = Math.min(targetLoops, Math.floor(totalPrayedBeads / totalBeads) + 1);
+      if (totalPrayedBeads === maxTotalPrayers) {
+        currentLoop = targetLoops;
+        currentBeadIndex = totalBeads;
+      } else {
+        currentBeadIndex = totalPrayedBeads % totalBeads;
+      }
+
+      fingerDragProgress = 0;
+      beadBaseProgress = -(totalPrayedBeads / totalBeads);
+
+      if (prevTotal !== totalPrayedBeads) {
+        swayVelocity += direction * 0.045;
+        playBeadSound();
+        updateCounterUI();
+
+        const loopBadge = document.getElementById("loop-badge");
+        if (loopBadge && targetLoops > 1) {
+          loopBadge.innerText = currentLoop + " / " + targetLoops + "회차";
+        }
+
+        if (totalPrayedBeads === maxTotalPrayers) {
+          playCompletionChime();
+          const compModal = document.getElementById("completion-modal");
+          if (compModal) {
+            const compText = compModal.querySelector("p");
+            if (compText) {
+              compText.innerText = targetLoops > 1 
+                ? "설정한 " + targetLoops + "회 반복 기도를 모두 정성껏 완수하셨습니다."
+                : "설정한 모든 묵주 알을 정성껏 다 지송하셨습니다.";
+            }
+            compModal.classList.add("active");
+          }
+        }
+      } else {
+        swayVelocity += direction * 0.02;
+      }
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth progress interpolation: tracks hand directly during drag, springs smoothly to bead
+      const targetProgress = beadBaseProgress + fingerDragProgress;
+      smoothProgress += (targetProgress - smoothProgress) * 0.35;
+
+      // Gentle continuous ambient left-right Y-axis rotation (묵주 전체가 좌우로 천천히 회전)
+      const time = Date.now() * 0.00035; // 매우 천천히 스스륵 회전하는 아주 느린 주기
+      const ambientRotationY = Math.sin(time) * 0.12; // 회전 범위를 좁혀 좌우 약 ±7도의 미세 회전
+
+      userRotationY += (targetRotationY - userRotationY) * 0.08;
+      if (rosaryGroup) {
+        rosaryGroup.rotation.y = userRotationY + ambientRotationY;
+      }
+
+      // Smooth spring sway oscillation
+      swayAngle += swayVelocity;
+      swayVelocity -= swayAngle * 0.04;
+      swayVelocity *= 0.92;
+
+      updateDynamicRosary(swayAngle);
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>묵주 기도 - 소원 성취</title>
+  <title>묵주 기도 - 거룩하고 고요한 3D 묵주</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#080c10">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1828,19 +1828,26 @@
       for (let i = 0; i < totalBeads; i++) {
         const bead = beadMeshes[i];
 
-        let isPrayedBead = (i < currentBeadIndex);
-        if (totalPrayedBeads >= totalBeads) {
-          isPrayedBead = true; // All beads completed in full loop
-        }
-
         const isCurrentlyActive = (currentBeadIndex === i && totalPrayedBeads < targetLoops * totalBeads);
+
+        let completedTurns = 0;
+        if (totalPrayedBeads > i) {
+          completedTurns = Math.floor((totalPrayedBeads - 1 - i) / totalBeads) + 1;
+        }
 
         if (isCurrentlyActive) {
           bead.material = getBeadThemeMaterial(currentTheme, "active");
           bead.scale.set(1.15, 1.15, 1.15); // 상단 활성 알 원색 유지 + 15% 볼륨감 확대
-        } else if (isPrayedBead) {
-          bead.material = getBeadThemeMaterial(currentTheme, "completed"); // 황금 보석 유리 머테리얼로 변경!
-          bead.scale.set(1.1, 1.1, 1.1); // 황금 묵주알 크기 1.1배 적용
+        } else if (completedTurns > 0) {
+          // 홀수 바퀴 완료(1, 3, 5회차...): 황금 보석 머테리얼 (1.1배)
+          // 짝수 바퀴 완료(2, 4, 6회차...): 선택한 테마 원색 머테리얼 (1.0배)
+          if (completedTurns % 2 === 1) {
+            bead.material = getBeadThemeMaterial(currentTheme, "completed"); // 황금 보석 머테리얼
+            bead.scale.set(1.1, 1.1, 1.1); // 황금 묵주알 크기 1.1배
+          } else {
+            bead.material = getBeadThemeMaterial(currentTheme, "pending"); // 원색 (옥색, 청색, 우드, 장미색)
+            bead.scale.set(1.0, 1.0, 1.0); // 원색 묵주알 1.0배
+          }
         } else {
           bead.material = getBeadThemeMaterial(currentTheme, "pending");
           bead.scale.set(1.0, 1.0, 1.0);
@@ -2124,6 +2131,7 @@
        6. PWA INSTALL BANNER & SERVICE WORKER LOGIC
        ========================================================== */
     let deferredPrompt = null;
+    let pwaBannerTimeout = null;
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
@@ -2139,7 +2147,14 @@
         return;
       }
       const banner = document.getElementById("pwa-install-banner");
-      if (banner) banner.classList.add("show");
+      if (banner) {
+        banner.classList.add("show");
+
+        if (pwaBannerTimeout) clearTimeout(pwaBannerTimeout);
+        pwaBannerTimeout = setTimeout(() => {
+          dismissPwaBanner();
+        }, 5000);
+      }
     }
 
     function triggerPwaInstall() {

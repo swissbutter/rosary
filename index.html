@@ -262,6 +262,17 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       margin-bottom: 12px;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .color-choice {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-align: center;
     }
 
     .color-swatch {
@@ -562,7 +573,7 @@
 
     <!-- 구슬 색상 선택 -->
     <div class="input-group">
-      <label>묵주 알 원색 선택</label>
+      <label>묵주 선택</label>
       <div class="color-picker-grid" style="grid-template-columns: repeat(4, 1fr);">
         <div class="color-choice active" data-theme="jade" onclick="selectColorTheme('jade', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #48c9b0 0%, #16a085 60%, #0b5345 100%);"></div>
@@ -994,7 +1005,7 @@
 
       makeSeamlessCanvas(canvas, (ctx, w, h) => {
         if (!ctx._bgDrawn) {
-          ctx.fillStyle = "#c02652"; // Deep Vivid Rose Quartz Magenta Base
+          ctx.fillStyle = "#880e4f"; // Rich Deep Magenta Ruby Base
           ctx.fillRect(0, 0, w, h);
           ctx._bgDrawn = true;
         }
@@ -1172,22 +1183,22 @@
           emissiveIntensity: 0.35
         });
       } else if (theme === "rose") {
-        // Sacred Translucent Rose Quartz (투명하게 빛나는 영롱한 장미수정)
+        // Sacred Deep Ruby Rose Quartz (깊고 진하게 빛나는 장미수정)
         if (!themeTextures.rose) themeTextures.rose = createProceduralRoseQuartzTexture();
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.rose,
-          color: 0xf472b6,
+          color: 0xd81b60,              // 더 깊고 진한 루비 로즈 매젠타 색상
           roughness: 0.05,
           metalness: 0.04,
-          transmission: 0.65,
-          thickness: 1.40,
+          transmission: 0.45,           // 투명도를 살짝 낮추어 진한 보석 발색감 극대화
+          thickness: 1.60,
           ior: 1.55,
           clearcoat: 1.0,
           clearcoatRoughness: 0.01,
           envMap: goldEnvMap,
           envMapIntensity: 1.9,
-          emissive: 0x4a0e22,
-          emissiveIntensity: 0.20
+          emissive: 0x6a0028,           // 속에서 우러나오는 그윽하고 진한 장미빛
+          emissiveIntensity: 0.35
         });
       } else {
         // Imperial Jade (비취옥)

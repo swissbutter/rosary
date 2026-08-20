@@ -641,21 +641,10 @@
     }
 
     const bellAudio = new Audio("church-bell2.mp3");
-    const whooshAudio = new Audio("whoosh.mp3");
-
-    function playWhooshSound() {
-      if (isMuted) return;
-      initAudio();
-      try {
-        const snd = whooshAudio.cloneNode();
-        snd.volume = 0.85;
-        snd.play().catch(e => {});
-        if (navigator.vibrate) navigator.vibrate(14);
-      } catch(e){}
-    }
 
     function playBeadSound() {
-      playWhooshSound();
+      if (isMuted) return;
+      if (navigator.vibrate) navigator.vibrate(14);
     }
 
     function playBellSound() {

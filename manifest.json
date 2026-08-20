@@ -1,6 +1,6 @@
 {
   "name": "묵주",
-  "short_name": "묵주기도",
+  "short_name": "묵주",
   "description": "마음을 모으는 묵주 웹앱",
   "start_url": "./index.html",
   "display": "standalone",

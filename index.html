@@ -102,12 +102,12 @@
       box-sizing: border-box;
     }
 
-    #setup-screen.hidden {
-      opacity: 0;
+    #setup-screen.hidden,
+    #setup-screen.hidden * {
+      opacity: 0 !important;
       pointer-events: none !important;
       display: none !important;
       visibility: hidden !important;
-      transform: translate(-50%, -50%) scale(0.94);
     }
 
     #setup-screen::-webkit-scrollbar { width: 4px; }
@@ -1456,7 +1456,7 @@
 
     function openSettings() {
       const setupScrn = document.getElementById("setup-screen");
-      if (setupScrn) setupScrn.style.display = "block";
+      if (setupScrn) setupScrn.style.display = "";
       const prayerUI = document.getElementById("prayer-ui");
       if (setupScrn) setupScrn.classList.remove("hidden");
       if (prayerUI) prayerUI.classList.remove("active");
@@ -1765,16 +1765,8 @@
         if (!isDragging) return;
         isDragging = false;
 
-        // 단순히 터치/클릭(Tap)했을 때 알이 넘어가는 현상을 완전히 100% 제거
-        if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
-          const deltaY = clientY - startDragY;
-          // 릴리즈 시에도 충분히 손가락을 끌어당겼을 때(threshold의 60% 이상)만 반영
-          if (deltaY > stepThresholdPixels * 0.6) {
-            stepToNextBead(1);
-          } else if (deltaY < -stepThresholdPixels * 0.6) {
-            stepToNextBead(-1);
-          }
-        }
+        // 터치/클릭 릴리즈 시 어떠한 조건에서도 알 넘김(stepToNextBead)을 100% 차단!
+        // 오직 handleMove 도중 손가락을 110px 이상 실시간으로 당겼을 때만 구슬이 넘어갑니다.
 
         fingerDragProgress = 0;
         isRotatingRosary = false;

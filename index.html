@@ -104,7 +104,9 @@
 
     #setup-screen.hidden {
       opacity: 0;
-      pointer-events: none;
+      pointer-events: none !important;
+      display: none !important;
+      visibility: hidden !important;
       transform: translate(-50%, -50%) scale(0.94);
     }
 
@@ -323,7 +325,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      pointer-events: auto;
+      pointer-events: none;
     }
 
     .counter-container {
@@ -1454,6 +1456,7 @@
 
     function openSettings() {
       const setupScrn = document.getElementById("setup-screen");
+      if (setupScrn) setupScrn.style.display = "block";
       const prayerUI = document.getElementById("prayer-ui");
       if (setupScrn) setupScrn.classList.remove("hidden");
       if (prayerUI) prayerUI.classList.remove("active");
@@ -1716,7 +1719,9 @@
       let initialRotateX = 0;
 
       const handleStart = (clientX, clientY, target) => {
-        if (target.closest("#setup-screen") || target.closest(".bottom-bar") || target.closest("#completion-modal") || target.closest(".top-bar")) {
+        const setupScrn = document.getElementById("setup-screen");
+        const isSetupVisible = setupScrn && !setupScrn.classList.contains("hidden");
+        if ((isSetupVisible && target.closest("#setup-screen")) || target.closest(".bottom-bar") || target.closest("#completion-modal")) {
           return false;
         }
         isDragging = true;

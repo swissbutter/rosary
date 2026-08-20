@@ -1,7 +1,7 @@
 {
-  "name": "묵주 기도 - 거룩하고 고요한 3D 묵주",
+  "name": "묵주 기도",
   "short_name": "묵주기도",
-  "description": "마음을 모으고 정성으로 바치는 거룩하고 고요한 3D 묵주 기도 웹앱",
+  "description": "마음을 모으고 정성으로 바치는 고요한 묵주 앱",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",

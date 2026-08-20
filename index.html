@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>묵주 기도 - 거룩하고 고요한 3D 묵주</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#080c10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="묵주기도">
+  <link rel="apple-touch-icon" href="icon-192.png">
   
   <style>
 @font-face {
@@ -407,41 +413,63 @@
     }
 
     .swipe-guide-text {
-      font-size: 12px;
-      color: rgba(200, 220, 240, 0.6);
-      margin-top: 4px;
-      letter-spacing: 1px;
+      font-size: 11.5px;
+      color: rgba(200, 220, 240, 0.75);
+      margin-top: 18px;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 1.5;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      opacity: 1;
+    }
+
+    .swipe-guide-text.fade-out {
+      opacity: 0 !important;
+      transform: translateY(6px);
+      pointer-events: none;
     }
 
     .bottom-bar {
       display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
       pointer-events: auto;
+      margin: 0 auto;
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
     }
 
     .action-btn {
-      background: rgba(14, 24, 36, 0.85);
-      border: 1px solid rgba(140, 170, 200, 0.3);
+      background: rgba(12, 22, 34, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(140, 175, 210, 0.30);
       color: #e2eaf4;
       padding: 10px 16px;
-      border-radius: 20px;
+      border-radius: 22px;
       font-family: "MaruBuri", serif;
       font-size: 13px;
+      font-weight: 500;
       cursor: pointer !important;
       pointer-events: auto !important;
-      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      transition: all 0.22s ease;
+      user-select: none;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .action-btn:hover {
-      background: rgba(26, 44, 66, 0.95);
-      border-color: #dceaf8;
-      color: #fff;
+    .action-btn:active, .action-btn:hover {
+      background: rgba(26, 46, 70, 0.95);
+      border-color: rgba(160, 200, 240, 0.55);
+      color: #ffffff;
+      transform: scale(0.96);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
 
     .sound-toggle-btn {
@@ -450,7 +478,7 @@
       border-radius: 50%;
       padding: 0;
       justify-content: center;
-      font-size: 18px;
+      font-size: 17px;
     }
 
     /* Completion Modal */
@@ -507,10 +535,112 @@
       z-index: 1000;
       cursor: pointer;
     }
+
+    /* PWA Banner Styles */
+    .pwa-banner {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-140%);
+      width: 92%;
+      max-width: 420px;
+      z-index: 10000;
+      background: rgba(12, 22, 34, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(160, 200, 240, 0.4);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), 0 0 15px rgba(100, 181, 246, 0.25);
+      transition: transform 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.4s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pwa-banner.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pwa-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pwa-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      flex-shrink: 0;
+    }
+
+    .pwa-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .pwa-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffd000;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .pwa-desc {
+      font-size: 10.5px;
+      color: #b0c4de;
+      line-height: 1.3;
+    }
+
+    .pwa-btn {
+      background: linear-gradient(135deg, #1d58d8 0%, #153e5e 100%);
+      border: 1px solid rgba(160, 200, 240, 0.5);
+      color: #ffffff;
+      font-family: "MaruBuri", serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer !important;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .pwa-btn:active {
+      transform: scale(0.95);
+    }
+
+    .pwa-close-btn {
+      background: transparent;
+      border: none;
+      color: #849bb0;
+      font-size: 15px;
+      cursor: pointer !important;
+      padding: 4px;
+      line-height: 1;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+
+  <!-- PWA 웹앱 설치 안내 바 -->
+  <div id="pwa-install-banner" class="pwa-banner">
+    <div class="pwa-content">
+      <img src="icon-512.png" alt="앱 아이콘" class="pwa-icon">
+      <div class="pwa-text">
+        <div class="pwa-title">📲 묵주기도 웹앱 설치</div>
+        <div class="pwa-desc">홈 화면에 추가하여 앱처럼 편리하게 바치세요!</div>
+      </div>
+      <button id="pwa-install-btn" class="pwa-btn" onclick="triggerPwaInstall()">앱 설치하기</button>
+      <button class="pwa-close-btn" onclick="dismissPwaBanner()">✕</button>
+    </div>
+  </div>
 
   <div id="bg-overlay"></div>
 
@@ -600,13 +730,13 @@
           <div class="loop-badge" id="loop-badge" style="display:none;">1 / 1회차</div>
         </div>
       </div>
-      <div class="swipe-guide-text">아래로 쓸어내려 알을 넘기세요</div>
+      <div class="swipe-guide-text" id="swipe-guide">아래로 쓸어내려 알을 넘기세요<br>손가락 두 개로 좌우 회전 / 핀치 줌을 해보세요</div>
     </div>
 
     <div class="bottom-bar">
       <button class="action-btn" onclick="resetCounter()">🔄 처음부터</button>
       <button class="action-btn sound-toggle-btn" id="sound-btn" onclick="toggleSound()">🔔</button>
-      <button class="action-btn" onclick="openSettings()">⚙️ 개수 변경</button>
+      <button class="action-btn" onclick="openSettings()">🪷 묵주 변경</button>
     </div>
   </div>
 
@@ -1337,6 +1467,19 @@
       }
     }
 
+    let guideTimeout = null;
+
+    function showGestureGuide() {
+      const guide = document.getElementById("swipe-guide");
+      if (!guide) return;
+      guide.classList.remove("fade-out");
+
+      if (guideTimeout) clearTimeout(guideTimeout);
+      guideTimeout = setTimeout(() => {
+        guide.classList.add("fade-out");
+      }, 5000);
+    }
+
     function resetCounter() {
       totalPrayedBeads = 0;
       currentBeadIndex = 0;
@@ -1365,6 +1508,7 @@
       updateCounterUI();
       updateDynamicRosary(0);
       closeCompletionModal();
+      showGestureGuide();
     }
 
     function updateCounterUI() {
@@ -1434,6 +1578,8 @@
       } else {
         rebuildRosaryScene();
       }
+
+      showGestureGuide();
     }
 
     function closeCompletionModal() {
@@ -1972,6 +2118,67 @@
       updateDynamicRosary(swayAngle);
       updateMysticalDustParticles();
       renderer.render(scene, camera);
+    }
+
+    /* ==========================================================
+       6. PWA INSTALL BANNER & SERVICE WORKER LOGIC
+       ========================================================== */
+    let deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showPwaBanner();
+    });
+
+    function showPwaBanner() {
+      if (window.matchMedia("(display-mode: standalone)").matches || navigator.standalone) {
+        return; // 이미 PWA 앱으로 실행 중이면 배너 표시 안 함
+      }
+      if (localStorage.getItem("pwa_dismissed") === "true") {
+        return;
+      }
+      const banner = document.getElementById("pwa-install-banner");
+      if (banner) banner.classList.add("show");
+    }
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === "accepted") {
+            dismissPwaBanner();
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+          alert("Safari 브라우저 하단의 공유[⎋] 버튼을 누른 후 '홈 화면에 추가'를 선택하면 앱으로 설치됩니다.");
+        } else {
+          alert("브라우저 메뉴(⋮)에서 '홈 화면에 추가' 또는 '앱 설치'를 선택하세요.");
+        }
+      }
+    }
+
+    function dismissPwaBanner() {
+      const banner = document.getElementById("pwa-install-banner");
+      if (banner) banner.classList.remove("show");
+      localStorage.setItem("pwa_dismissed", "true");
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").then(reg => {
+          console.log("ServiceWorker registered:", reg);
+        }).catch(err => {
+          console.error("ServiceWorker registration failed:", err);
+        });
+
+        setTimeout(() => {
+          showPwaBanner();
+        }, 1200);
+      });
     }
   </script>
 </body>

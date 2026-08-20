@@ -162,30 +162,23 @@
       background: rgba(14, 22, 32, 0.85);
       border: 1px solid rgba(140, 170, 200, 0.25);
       border-radius: 10px;
-      padding: 8px 4px;
+      padding: 10px 4px;
       cursor: pointer !important;
       /* pointer-events inherited */
       touch-action: manipulation !important;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 1px;
       transition: all 0.2s ease;
     }
 
-    .bead-select-card .count-number {
+    .bead-select-card .count-text {
       font-family: "MaruBuri", serif;
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 700;
       color: #f1f5f9;
       line-height: 1;
-    }
-
-    .bead-select-card .count-unit {
-      font-size: 10px;
-      color: #94a8b8;
-      font-weight: 500;
     }
 
     .custom-inputs-row {
@@ -273,6 +266,7 @@
       justify-content: center;
       cursor: pointer;
       text-align: center;
+      gap: 4px;
     }
 
     .color-swatch {
@@ -284,8 +278,9 @@
     }
 
     .color-choice span {
-      font-size: 10px;
+      font-size: 11px;
       color: #88a0b5;
+      margin-top: 5px;
     }
 
     .start-btn {
@@ -527,43 +522,37 @@
 
     <!-- 알 개수 선택: 5 / 10 / 33 / 59 / 99 / 108 & 직접 입력 -->
     <div class="input-group">
-      <label>기도 알 개수 선택</label>
+      <label>알 개수 선택</label>
       <div class="preset-grid-clean">
         <div class="bead-select-card" id="bead-card-5" onclick="selectBeadPreset(5, event)">
-          <span class="count-number">5</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">5알</span>
         </div>
         <div class="bead-select-card" id="bead-card-10" onclick="selectBeadPreset(10, event)">
-          <span class="count-number">10</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">10알</span>
         </div>
         <div class="bead-select-card" id="bead-card-33" onclick="selectBeadPreset(33, event)">
-          <span class="count-number">33</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">33알</span>
         </div>
         <div class="bead-select-card active" id="bead-card-59" onclick="selectBeadPreset(59, event)">
-          <span class="count-number">59</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">59알</span>
         </div>
         <div class="bead-select-card" id="bead-card-99" onclick="selectBeadPreset(99, event)">
-          <span class="count-number">99</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">99알</span>
         </div>
         <div class="bead-select-card" id="bead-card-108" onclick="selectBeadPreset(108, event)">
-          <span class="count-number">108</span>
-          <span class="count-unit">알</span>
+          <span class="count-text">108알</span>
         </div>
       </div>
 
       <!-- 직접 입력 및 반복 횟수 스텝 버튼란 -->
       <div class="custom-inputs-row">
         <div class="custom-input-box">
-          <label>✏️ 직접 입력:</label>
+          <label>직접 입력:</label>
           <input type="number" id="custom-bead-input" min="3" max="2000" placeholder="59" value="59" oninput="onCustomBeadInput(this.value)">
           <span class="unit-text">알</span>
         </div>
         <div class="custom-input-box loop-stepper-box">
-          <label>🔁 반복:</label>
+          <label>반복:</label>
           <button type="button" class="stepper-btn" onclick="adjustLoopCount(-1, event)">−</button>
           <span class="stepper-val" id="loop-count-display">1회</span>
           <button type="button" class="stepper-btn" onclick="adjustLoopCount(1, event)">+</button>
@@ -572,24 +561,24 @@
     </div>
 
     <!-- 구슬 색상 선택 -->
-    <div class="input-group">
+    <div class="input-group" style="margin-top: 14px;">
       <label>묵주 선택</label>
       <div class="color-picker-grid" style="grid-template-columns: repeat(4, 1fr);">
         <div class="color-choice active" data-theme="jade" onclick="selectColorTheme('jade', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #48c9b0 0%, #16a085 60%, #0b5345 100%);"></div>
-          <span>비취옥</span>
+          <span>옥색</span>
         </div>
         <div class="color-choice" data-theme="blue" onclick="selectColorTheme('blue', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #5dade2 0%, #2471a3 60%, #153e5e 100%);"></div>
-          <span>청금석</span>
+          <span>청색</span>
         </div>
         <div class="color-choice" data-theme="wood" onclick="selectColorTheme('wood', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #d4a373 0%, #a06a38 60%, #583110 100%);"></div>
-          <span>올리브목</span>
+          <span>우드</span>
         </div>
         <div class="color-choice" data-theme="rose" onclick="selectColorTheme('rose', this)">
           <div class="color-swatch" style="background: radial-gradient(circle at 35% 35%, #f1948a 0%, #cd6155 60%, #7b241c 100%);"></div>
-          <span>장미수정</span>
+          <span>장미색</span>
         </div>
       </div>
     </div>
@@ -651,58 +640,37 @@
       }
     }
 
-    function playBeadSound() {
+    const bellAudio = new Audio("church-bell2.mp3");
+    const whooshAudio = new Audio("whoosh.mp3");
+
+    function playWhooshSound() {
       if (isMuted) return;
       initAudio();
-      if (!audioCtx) return;
-
       try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(440 + Math.random() * 60, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.04);
-
-        gain.gain.setValueAtTime(0.32, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.04);
-
+        const snd = whooshAudio.cloneNode();
+        snd.volume = 0.85;
+        snd.play().catch(e => {});
         if (navigator.vibrate) navigator.vibrate(14);
       } catch(e){}
     }
 
-    function playCompletionChime() {
+    function playBeadSound() {
+      playWhooshSound();
+    }
+
+    function playBellSound() {
       if (isMuted) return;
       initAudio();
-      if (!audioCtx) return;
-
       try {
-        const freqs = [528, 1056, 1584, 2112];
-        freqs.forEach((freq, idx) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-          const duration = 2.8 - idx * 0.4;
-          gain.gain.setValueAtTime(0.18 / (idx + 1), audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start();
-          osc.stop(audioCtx.currentTime + duration);
-        });
+        const snd = bellAudio.cloneNode();
+        snd.volume = 0.95;
+        snd.play().catch(e => {});
         if (navigator.vibrate) navigator.vibrate([40, 80, 120]);
       } catch(e){}
+    }
+
+    function playCompletionChime() {
+      playBellSound();
     }
 
     function toggleSound() {
@@ -1107,10 +1075,10 @@
         materialCache[key] = new THREE.MeshPhysicalMaterial({
           map: themeTextures.gold,
           color: 0xffff00,              // 100% 순수 비비드 옐로우 (Pure Vivid Canary Yellow)
-          roughness: 0.01,              // 극상의 유리 광택
-          metalness: 0.02,              // 어두운 음영 반사를 줄이기 위해 메탈릭 2% 최소화
-          transmission: 0.85,           // 85% 투명하게 빛을 사방으로 퍼뜨림
-          thickness: 2.0,               // 두꺼운 노란 유리알 내부 굴절
+          roughness: 0.05,              // 매끄러운 보석 광택
+          metalness: 0.35,              // 황금 질감
+          transmission: 0.25,           // 영롱한 보석 체적감 및 시각적 축소 현상 방지
+          thickness: 1.0,
           ior: 1.55,
           clearcoat: 1.0,
           clearcoatRoughness: 0.01,
@@ -1277,7 +1245,6 @@
     let swayVelocity = 0;
 
     function getBeadRadius(total) {
-      if (total <= 10) return 0.28;
       if (total <= 33) return 0.22;
       if (total <= 59) return 0.18;
       return Math.max(0.09, 0.18 * Math.pow(59 / total, 0.50));
@@ -1312,13 +1279,32 @@
       ];
     }
 
+    let currentZoomScale = 1.0;
+    let targetZoomScale = 1.0;
+    let initialZoomScale = 1.0;
+    let initialTwoFingerDist = 0;
+    const MIN_ZOOM_SCALE = 0.55; // 줌인 최대 한계 (가까움 제한)
+    const MAX_ZOOM_SCALE = 2.2;  // 줌아웃 최대 한계 (멀어짐 제한)
+
     function updateCameraFraming(total) {
       if (!camera) return;
       const topY = 1.75;
 
-      const zoomExponent = 0.72;
-      const zoomFactor = Math.pow(59 / Math.max(20, total), zoomExponent);
-      const baseCamDist = 4.2 * Math.max(0.32, Math.min(1.35, zoomFactor));
+      let distFactor = 1.0;
+      if (total <= 33) {
+        distFactor = 0.93; // 5, 10, 33알: 기존보다 약간 뒤로 (5.39)
+      } else if (total === 59) {
+        distFactor = 1.0;  // 59알: 기준 정상 (5.80)
+      } else if (total <= 108) {
+        // 99, 108알: 기존보다 약간 앞으로 (6.18 ~ 6.26)
+        const ratio = (total - 59) / (108 - 59);
+        distFactor = 1.0 + ratio * 0.08;
+      } else {
+        const ratio = (total - 108) / 500;
+        distFactor = 1.08 + Math.min(1.0, ratio * 0.4);
+      }
+
+      const baseCamDist = 5.8 * distFactor * currentZoomScale;
 
       const camY = topY + baseCamDist * 0.72;
       const camZ = baseCamDist * 0.92;
@@ -1374,6 +1360,8 @@
       hasTriggeredInCurrentSwipe = false;
       userRotationY = BASE_ROTATION_Y;
       targetRotationY = BASE_ROTATION_Y;
+      targetZoomScale = 1.0;
+      currentZoomScale = 1.0;
 
       const loopBadge = document.getElementById("loop-badge");
       if (loopBadge) {
@@ -1405,6 +1393,7 @@
 
     function startRosary() {
       initAudio();
+      playBellSound();
       
       const customIn = document.getElementById("custom-bead-input");
       if (customIn && customIn.value) {
@@ -1445,6 +1434,8 @@
       swayVelocity = 0;
       userRotationY = BASE_ROTATION_Y;
       targetRotationY = BASE_ROTATION_Y;
+      targetZoomScale = 1.0;
+      currentZoomScale = 1.0;
       hasTriggeredInCurrentSwipe = false;
 
       updateCounterUI();
@@ -1714,7 +1705,7 @@
           bead.scale.set(1.15, 1.15, 1.15); // 상단 활성 알 원색 유지 + 15% 볼륨감 확대
         } else if (isPrayedBead) {
           bead.material = getBeadThemeMaterial(currentTheme, "completed"); // 황금 보석 유리 머테리얼로 변경!
-          bead.scale.set(1.0, 1.0, 1.0);
+          bead.scale.set(1.1, 1.1, 1.1); // 황금 묵주알 크기 1.1배 적용
         } else {
           bead.material = getBeadThemeMaterial(currentTheme, "pending");
           bead.scale.set(1.0, 1.0, 1.0);
@@ -1827,14 +1818,19 @@
         }
       });
 
-      // TOUCH LISTENERS (두 손가락: 3D 회전 / 한 손가락: 묵주 알 상하 스와이프 전용)
+      // TOUCH LISTENERS (두 손가락: 3D 회전 및 핀치 줌인/줌아웃 / 한 손가락: 묵주 알 상하 스와이프 전용)
       window.addEventListener("touchstart", (e) => {
         if (e.touches.length >= 2) {
-          // 두 손가락 감지 시 회전 모드 활성화 (한 손가락 알 넘기기 오작동 100% 방지)
+          // 두 손가락 감지 시 회전 및 핀치 줌 모드 활성화 (한 손가락 알 넘기기 오작동 100% 방지)
           isRotatingRosary = true;
           isDragging = false;
           fingerDragProgress = 0;
           initialRotateX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+          initialTwoFingerDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          initialZoomScale = targetZoomScale;
           if (e.cancelable) e.preventDefault();
         } else if (e.touches.length === 1) {
           isRotatingRosary = false;
@@ -1854,6 +1850,17 @@
             initialRotateX = currentTwoFingerX;
             targetRotationY += rotateDeltaX * 0.008;
             targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, targetRotationY));
+
+            // 두 손가락 핀치 줌인 / 줌아웃 및 한계(Min/Max) 제한
+            const currentDist = Math.hypot(
+              e.touches[0].clientX - e.touches[1].clientX,
+              e.touches[0].clientY - e.touches[1].clientY
+            );
+            if (initialTwoFingerDist > 0) {
+              const pinchRatio = currentDist / initialTwoFingerDist;
+              const rawZoom = initialZoomScale / pinchRatio;
+              targetZoomScale = Math.max(MIN_ZOOM_SCALE, Math.min(MAX_ZOOM_SCALE, rawZoom));
+            }
           }
           return;
         }
@@ -1868,6 +1875,7 @@
       window.addEventListener("touchend", (e) => {
         if (e.touches.length < 2 && isRotatingRosary) {
           isRotatingRosary = false;
+          initialTwoFingerDist = 0;
         }
         if (isDragging && e.touches.length === 0) {
           if (e.cancelable) e.preventDefault();
@@ -1959,6 +1967,12 @@
       userRotationY += (targetRotationY - userRotationY) * 0.08;
       if (rosaryGroup) {
         rosaryGroup.rotation.y = userRotationY + ambientRotationY;
+      }
+
+      // Smooth pinch zoom interpolation & camera update
+      currentZoomScale += (targetZoomScale - currentZoomScale) * 0.14;
+      if (camera) {
+        updateCameraFraming(totalBeads);
       }
 
       // Smooth spring sway oscillation

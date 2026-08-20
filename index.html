@@ -1709,7 +1709,7 @@
        5. DISTINCT TWO-FINGER ROTATION & ONE-FINGER BEAD SWIPING SYSTEM
        ========================================================== */
     function setupInteractionEvents() {
-      const stepThresholdPixels = 45;
+      const stepThresholdPixels = 110; // 손가락 움직임 범위를 약 2.5배(110px)로 넉넉하게 확장 (1:2 비례 이상의 여유로운 스크롤)
       let lastTouchY = 0;
       let initialTwoFingerDist = 0;
       let initialTwoFingerAngle = 0;
@@ -1733,7 +1733,7 @@
         if (!isDragging || isRotatingRosary) return;
         const deltaY = clientY - startDragY;
 
-        // 한 손가락 수직 스와이프 전용: 100% 묵주 알 넘기기 및 미세 파동만 반응
+        // 한 손가락 수직 스와이프: 손가락을 넉넉하게 위아래로 끌어야 알이 매끄럽게 넘어감
         if (!hasTriggeredInCurrentSwipe) {
           const rawRatio = -(deltaY / stepThresholdPixels);
           const clampedRatio = Math.max(-1.0, Math.min(1.0, rawRatio));
@@ -1743,7 +1743,7 @@
           lastTouchY = clientY;
           swayVelocity += (moveSpeed > 0 ? 0.0018 : -0.0018);
 
-          // 45px 이상 상하로 당기면 구슬 넘김
+          // 110px 이상 넉넉하게 쓸어내리거나 올렸을 때 알 넘김
           if (deltaY > stepThresholdPixels) {
             stepToNextBead(1);
             hasTriggeredInCurrentSwipe = true;
@@ -1760,15 +1760,13 @@
         if (!isDragging) return;
         isDragging = false;
 
+        // 단순히 터치/클릭(Tap)했을 때 알이 넘어가는 현상을 완전히 100% 제거
         if (!isRotatingRosary && !hasTriggeredInCurrentSwipe) {
           const deltaY = clientY - startDragY;
-          const dist = Math.hypot(clientX - startDragX, clientY - startDragY);
-          
-          if (dist < 12) {
-            stepToNextBead(1); // 탭(Tap) 넘김
-          } else if (deltaY > stepThresholdPixels * 0.4) {
+          // 릴리즈 시에도 충분히 손가락을 끌어당겼을 때(threshold의 60% 이상)만 반영
+          if (deltaY > stepThresholdPixels * 0.6) {
             stepToNextBead(1);
-          } else if (deltaY < -stepThresholdPixels * 0.4) {
+          } else if (deltaY < -stepThresholdPixels * 0.6) {
             stepToNextBead(-1);
           }
         }

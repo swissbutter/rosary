@@ -1749,6 +1749,12 @@
       animate();
     }
 
+    const tempZAxis = new THREE.Vector3(0, 0, 1);
+    const tempTangent = new THREE.Vector3();
+    const uniqueQuaternions = [];
+    let deformedSplinePoints = [];
+    let lastSwayOffset = -999;
+
     function rebuildRosaryScene() {
       if (rosaryGroup) scene.remove(rosaryGroup);
 
@@ -1758,27 +1764,41 @@
       beadMeshes = [];
 
       baseSplinePoints = getGravitySplinePoints(totalBeads);
-      rosarySpline = new THREE.CatmullRomCurve3(baseSplinePoints, true, "centripetal", 0.5);
+      deformedSplinePoints = baseSplinePoints.map(pt => pt.clone());
+      rosarySpline = new THREE.CatmullRomCurve3(deformedSplinePoints, true, "centripetal", 0.5);
 
       const beadR = getBeadRadius(totalBeads);
       const cordR = getCordThickness(totalBeads);
 
       updateCameraFraming(totalBeads);
 
-      // 1. Slim Golden Cord
-      const tubeGeo = new THREE.TubeGeometry(rosarySpline, 320, cordR, 12, true);
+      // Pre-compute fixed randomized unique orientations per bead (eliminates thousands of Euler/Quaternion allocations per second)
+      uniqueQuaternions.length = 0;
+      for (let i = 0; i < totalBeads; i++) {
+        const uniqueEuler = new THREE.Euler(
+          (i * 1.618) % (Math.PI * 2),
+          (i * 2.414) % (Math.PI * 2),
+          (i * 3.141) % (Math.PI * 2)
+        );
+        uniqueQuaternions.push(new THREE.Quaternion().setFromEuler(uniqueEuler));
+      }
+
+      // 1. Slim Golden Cord (Optimized 180 segments for high FPS)
+      const tubeGeo = new THREE.TubeGeometry(rosarySpline, 180, cordR, 8, true);
       cordMesh = new THREE.Mesh(tubeGeo, createCordMaterial());
       cordMesh.castShadow = true;
       rosaryGroup.add(cordMesh);
 
       // 2. Pure Spherical Natural Beads
-      const beadGeo = new THREE.SphereGeometry(beadR, 32, 32);
+      const beadGeo = new THREE.SphereGeometry(beadR, 28, 28);
+      const initialPendingMat = createWhiteJadeMaterial("pending");
 
       for (let i = 0; i < totalBeads; i++) {
-        const bead = new THREE.Mesh(beadGeo, createWhiteJadeMaterial("pending"));
+        const bead = new THREE.Mesh(beadGeo, initialPendingMat);
         bead.castShadow = true;
         bead.receiveShadow = true;
         bead.userData = { index: i };
+        bead._cachedScale = 1.0;
         bead.scale.set(1.0, 1.0, 1.0);
 
         rosaryGroup.add(bead);
@@ -1786,6 +1806,7 @@
       }
 
       scene.add(rosaryGroup);
+      lastSwayOffset = -999;
       updateDynamicRosary(0);
     }
 
@@ -1797,27 +1818,36 @@
 
       const cordR = getCordThickness(totalBeads);
 
-      const deformedPoints = baseSplinePoints.map((pt, idx) => {
-        const newPt = pt.clone();
-        if (idx >= 2 && idx <= 8) {
-          const depthWeight = Math.max(0, 1.75 - pt.y) / 3.5;
-          newPt.x += Math.sin(swayOffset) * depthWeight * 0.45;
+      // Update spline points in-place without garbage collection
+      const swayDiff = Math.abs(swayOffset - lastSwayOffset);
+      if (swayDiff > 0.0001) {
+        lastSwayOffset = swayOffset;
+        const sinSway = Math.sin(swayOffset);
+        for (let idx = 0; idx < baseSplinePoints.length; idx++) {
+          const basePt = baseSplinePoints[idx];
+          const defPt = deformedSplinePoints[idx];
+          defPt.y = basePt.y;
+          defPt.z = basePt.z;
+          if (idx >= 2 && idx <= 8) {
+            const depthWeight = Math.max(0, 1.75 - basePt.y) / 3.5;
+            defPt.x = basePt.x + sinSway * depthWeight * 0.45;
+          } else {
+            defPt.x = basePt.x;
+          }
         }
-        return newPt;
-      });
+        rosarySpline.updateArcLength = true;
 
-      rosarySpline.points = deformedPoints;
-      rosarySpline.updateArcLength = true;
-
-      if (cordMesh) {
-        cordMesh.geometry.dispose();
-        cordMesh.geometry = new THREE.TubeGeometry(rosarySpline, 320, cordR, 12, true);
-
-        if (cordTexture) {
-          cordTexture.offset.y = smoothProgress * 60;
+        if (cordMesh) {
+          cordMesh.geometry.dispose();
+          cordMesh.geometry = new THREE.TubeGeometry(rosarySpline, 180, cordR, 8, true);
         }
       }
 
+      if (cordMesh && cordTexture) {
+        cordTexture.offset.y = smoothProgress * 60;
+      }
+
+      // Position beads & set orientations efficiently using pre-allocated vectors
       for (let i = 0; i < totalBeads; i++) {
         let normalizedProgress = (i / totalBeads + smoothProgress) % 1.0;
         if (normalizedProgress < 0) normalizedProgress += 1.0;
@@ -1825,24 +1855,18 @@
         const pt = rosarySpline.getPointAt(normalizedProgress);
         beadMeshes[i].position.copy(pt);
 
-        const tangent = rosarySpline.getTangentAt(normalizedProgress);
-        const zAxis = new THREE.Vector3(0, 0, 1);
-        beadMeshes[i].quaternion.setFromUnitVectors(zAxis, tangent);
-        
-        // 3D Unique Random Orientations per bead so wood grain & lapis swirls look completely unique & non-linear on each bead
-        const uniqueEuler = new THREE.Euler(
-          (i * 1.618) % (Math.PI * 2), // Golden ratio X rotation
-          (i * 2.414) % (Math.PI * 2), // Silver ratio Y rotation
-          (i * 3.141) % (Math.PI * 2)  // Pi Z rotation
-        );
-        beadMeshes[i].quaternion.multiply(new THREE.Quaternion().setFromEuler(uniqueEuler));
+        rosarySpline.getTangentAt(normalizedProgress, tempTangent);
+        beadMeshes[i].quaternion.setFromUnitVectors(tempZAxis, tempTangent);
+        if (uniqueQuaternions[i]) {
+          beadMeshes[i].quaternion.multiply(uniqueQuaternions[i]);
+        }
       }
 
       const currentLoopIndex = Math.floor(totalPrayedBeads / totalBeads);
 
+      // Material & Scale assignment with redundant change suppression
       for (let i = 0; i < totalBeads; i++) {
         const bead = beadMeshes[i];
-
         const isCurrentlyActive = (currentBeadIndex === i && totalPrayedBeads < targetLoops * totalBeads);
 
         let completedTurns = 0;
@@ -1850,28 +1874,35 @@
           completedTurns = Math.floor((totalPrayedBeads - 1 - i) / totalBeads) + 1;
         }
 
+        let targetMat;
+        let targetScale = 1.0;
+
         if (isCurrentlyActive) {
-          // 짝수 바퀴차 시작(1, 3, 5회차... currentLoopIndex 0, 2, 4): 상단 활성 알 원색 (1.15배)
-          // 홀수 바퀴차 시작(2, 4, 6회차... currentLoopIndex 1, 3, 5): 상단 활성 알 황금색 (1.15배) - 내리기 전까지 황금색 유지!
-          if (currentLoopIndex % 2 === 0) {
-            bead.material = getBeadThemeMaterial(currentTheme, "active");
-          } else {
-            bead.material = getBeadThemeMaterial(currentTheme, "completed");
-          }
-          bead.scale.set(1.15, 1.15, 1.15); // 상단 활성 알 15% 볼륨감 확대
+          // 짝수 바퀴차(1, 3, 5회차... loopIndex 0, 2, 4): 상단 활성 알 원색 (1.15배)
+          // 홀수 바퀴차(2, 4, 6회차... loopIndex 1, 3, 5): 상단 활성 알 황금색 (1.15배) - 내리기 전까지 황금색 유지!
+          targetMat = (currentLoopIndex % 2 === 0)
+            ? getBeadThemeMaterial(currentTheme, "active")
+            : getBeadThemeMaterial(currentTheme, "completed");
+          targetScale = 1.15;
         } else if (completedTurns > 0) {
           // 홀수 바퀴 완료(1, 3, 5회차...): 황금 보석 머테리얼 (1.1배)
           // 짝수 바퀴 완료(2, 4, 6회차...): 선택한 테마 원색 머테리얼 (1.0배)
           if (completedTurns % 2 === 1) {
-            bead.material = getBeadThemeMaterial(currentTheme, "completed"); // 황금 보석 머테리얼
-            bead.scale.set(1.1, 1.1, 1.1); // 황금 묵주알 크기 1.1배
+            targetMat = getBeadThemeMaterial(currentTheme, "completed");
+            targetScale = 1.1;
           } else {
-            bead.material = getBeadThemeMaterial(currentTheme, "pending"); // 원색 (옥색, 청색, 우드, 장미색)
-            bead.scale.set(1.0, 1.0, 1.0); // 원색 묵주알 1.0배
+            targetMat = getBeadThemeMaterial(currentTheme, "pending");
+            targetScale = 1.0;
           }
         } else {
-          bead.material = getBeadThemeMaterial(currentTheme, "pending");
-          bead.scale.set(1.0, 1.0, 1.0);
+          targetMat = getBeadThemeMaterial(currentTheme, "pending");
+          targetScale = 1.0;
+        }
+
+        if (bead.material !== targetMat) bead.material = targetMat;
+        if (bead._cachedScale !== targetScale) {
+          bead._cachedScale = targetScale;
+          bead.scale.set(targetScale, targetScale, targetScale);
         }
       }
     }

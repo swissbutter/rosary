@@ -1,10 +1,11 @@
-const CACHE_NAME = "rosary-3d-v1";
+const CACHE_NAME = "rosary-3d-v2";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./church-bell2.mp3"
 ];
 
 self.addEventListener("install", (e) => {
